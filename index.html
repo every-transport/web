@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Every Transport - Travel & Wisata Magetan, Ponorogo, Madiun</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://raw.githubusercontent.com/every-transport/amanda-trans-group.github.io/refs/heads/main/style.css">
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-inner">
+    <div class="loader-logo">ET</div>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <span class="logo-mark">ET</span>
+      <div class="logo-text">
+        <span class="logo-main">Every Transport</span>
+        <span class="logo-sub">Travel & Wisata</span>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#home">Beranda</a></li>
+      <li><a href="#armada">Armada</a></li>
+      <li><a href="#wisata">Wisata</a></li>
+      <li><a href="#visi-misi">Tentang</a></li>
+      <li><a href="#testimoni">Testimoni</a></li>
+      <li><a href="#booking" class="nav-cta">Booking</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-mobile" id="navMobile">
+    <a href="#home" onclick="closeMenu()">Beranda</a>
+    <a href="#armada" onclick="closeMenu()">Armada</a>
+    <a href="#wisata" onclick="closeMenu()">Wisata</a>
+    <a href="#visi-misi" onclick="closeMenu()">Tentang</a>
+    <a href="#testimoni" onclick="closeMenu()">Testimoni</a>
+    <a href="#booking" onclick="closeMenu()">Booking</a>
+    <a href="#admin" onclick="closeMenu()">Admin</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home" class="hero">
+  <div class="hero-bg">
+    <div class="hero-overlay"></div>
+    <div class="hero-particles" id="particles"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge animate-fade-up">✦ Melayani Magetan · Ponorogo · Madiun</div>
+    <h1 class="hero-title animate-fade-up delay-1">
+      Perjalanan<br><span class="gold-text">Tak Terlupakan</span><br>Bersama Kami
+    </h1>
+    <p class="hero-desc animate-fade-up delay-2">Layanan transportasi premium untuk wisata alam, religi, dan perjalanan bisnis di Jawa Timur, Tengah & Barat dengan armada modern dan pengemudi profesional.</p>
+    <div class="hero-actions animate-fade-up delay-3">
+      <a href="#booking" class="btn-primary">Pesan Sekarang</a>
+      <a href="#armada" class="btn-outline">Lihat Armada</a>
+    </div>
+    <div class="hero-stats animate-fade-up delay-4">
+      <div class="stat"><span class="stat-num" data-count="500">0</span><span>+</span><p>Trip Selesai</p></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span class="stat-num" data-count="8">0</span><span>+</span><p>Jenis Armada</p></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span class="stat-num" data-count="50">0</span><span>+</span><p>Destinasi</p></div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-icon"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ARMADA -->
+<section id="armada" class="section armada-section">
+  <div class="section-header">
+    <div class="section-tag">Armada Kami</div>
+    <h2 class="section-title">Pilihan Kendaraan <span class="gold-text">Premium</span></h2>
+    <p class="section-desc">Armada modern dengan kondisi prima, AC, dan pengemudi berpengalaman untuk kenyamanan perjalanan Anda</p>
+  </div>
+  <div class="armada-grid" id="armadaGrid">
+    <!-- Filled by JS -->
+  </div>
+</section>
+
+<!-- ARMADA MODAL -->
+<div class="modal-overlay" id="armadaModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-img-wrap">
+      <img id="modalImg" src="" alt="">
+    </div>
+    <div class="modal-info">
+      <h3 id="modalName"></h3>
+      <div class="modal-badge" id="modalCapacity"></div>
+      <p id="modalDesc"></p>
+      <div class="modal-features" id="modalFeatures"></div>
+      <div class="modal-price">
+        <span>Mulai dari</span>
+        <strong id="modalPrice"></strong>
+      </div>
+      <a id="modalBook" href="#" class="btn-primary" target="_blank">Booking via WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<!-- WISATA -->
+<section id="wisata" class="section wisata-section">
+  <div class="section-header">
+    <div class="section-tag">Destinasi Wisata</div>
+    <h2 class="section-title">Jelajahi <span class="gold-text">Keindahan</span> Nusantara</h2>
+    <p class="section-desc">Wisata alam dan religi terpilih di Jawa Timur, Jawa Tengah & Jawa Barat</p>
+  </div>
+  <div class="wisata-filter">
+    <button class="filter-btn active" data-filter="all">Semua</button>
+    <button class="filter-btn" data-filter="jatim">Jawa Timur</button>
+    <button class="filter-btn" data-filter="jateng">Jawa Tengah</button>
+    <button class="filter-btn" data-filter="jabar">Jawa Barat</button>
+    <button class="filter-btn" data-filter="alam">Wisata Alam</button>
+    <button class="filter-btn" data-filter="religi">Wisata Religi</button>
+  </div>
+  <div class="wisata-grid" id="wisataGrid">
+    <!-- Filled by JS -->
+  </div>
+</section>
+
+<!-- WISATA MODAL -->
+<div class="modal-overlay" id="wisataModal">
+  <div class="modal-box wisata-modal-box">
+    <button class="modal-close" onclick="closeWisataModal()">✕</button>
+    <div class="modal-img-wrap">
+      <img id="wModalImg" src="" alt="">
+    </div>
+    <div class="modal-info">
+      <div class="modal-tags-wrap">
+        <span class="modal-tag" id="wModalProvince"></span>
+        <span class="modal-tag" id="wModalType"></span>
+      </div>
+      <h3 id="wModalName"></h3>
+      <p id="wModalDesc"></p>
+      <div class="modal-detail-grid" id="wModalDetails"></div>
+      <a id="wModalBook" href="#" class="btn-primary" target="_blank">Pesan Paket Wisata</a>
+    </div>
+  </div>
+</div>
+
+<!-- VISI MISI -->
+<section id="visi-misi" class="section visi-section">
+  <div class="visi-container">
+    <div class="visi-left">
+      <div class="section-tag">Tentang Kami</div>
+      <h2 class="section-title">Every Transport<br><span class="gold-text">Siap Melayani</span></h2>
+      <p class="visi-intro">Kami hadir sejak 2015 sebagai mitra perjalanan terpercaya di kawasan Magetan, Ponorogo, dan Madiun. Dengan armada modern dan tim profesional, kami memastikan setiap perjalanan Anda aman, nyaman, dan berkesan.</p>
+      <div class="visi-box">
+        <div class="visi-icon">◈</div>
+        <div>
+          <h3>Visi</h3>
+          <p>Menjadi perusahaan transportasi pariwisata terpercaya dan terdepan di Jawa Timur yang mengutamakan keselamatan, kenyamanan, dan kepuasan pelanggan dalam setiap perjalanan.</p>
+        </div>
+      </div>
+      <div class="misi-box">
+        <div class="visi-icon">◇</div>
+        <div>
+          <h3>Misi</h3>
+          <ul>
+            <li>Menyediakan armada transportasi yang terawat, bersih, dan nyaman</li>
+            <li>Menghadirkan pengemudi profesional, ramah, dan berpengalaman</li>
+            <li>Memberikan layanan 24 jam dengan respons cepat dan harga transparan</li>
+            <li>Terus berinovasi dalam pelayanan untuk kepuasan pelanggan</li>
+            <li>Membangun kepercayaan melalui integritas dan profesionalisme</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="visi-right">
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon">🛡️</div>
+          <h4>Aman & Terpercaya</h4>
+          <p>Driver berpengalaman dengan SIM resmi & rekam jejak bersih</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">⚡</div>
+          <h4>Respons Cepat</h4>
+          <p>Konfirmasi booking dalam hitungan menit via WhatsApp</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">💎</div>
+          <h4>Armada Premium</h4>
+          <p>Kendaraan terawat, bersih & ber-AC untuk kenyamanan optimal</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">💰</div>
+          <h4>Harga Transparan</h4>
+          <p>Tanpa biaya tersembunyi, harga terbaik dan kompetitif</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">🗺️</div>
+          <h4>Hafal Rute</h4>
+          <p>Menguasai jalur wisata Jawa Timur, Tengah & Barat</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">🕐</div>
+          <h4>24 Jam Siaga</h4>
+          <p>Layanan tersedia kapan saja, termasuk hari libur & malam</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERI & TESTIMONI -->
+<section id="testimoni" class="section testi-section">
+  <div class="section-header">
+    <div class="section-tag">Testimoni</div>
+    <h2 class="section-title">Kata <span class="gold-text">Pelanggan</span> Kami</h2>
+    <p class="section-desc">Ribuan pelanggan telah mempercayakan perjalanan mereka kepada kami</p>
+  </div>
+  <div class="testi-track-wrap">
+    <div class="testi-track" id="testiTrack">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+  <div class="testi-dots" id="testiDots"></div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking" class="section booking-section">
+  <div class="booking-container">
+    <div class="booking-left">
+      <div class="section-tag">Pesan Sekarang</div>
+      <h2 class="section-title">Booking <span class="gold-text">Mudah & Cepat</span></h2>
+      <p>Isi formulir berikut dan kami akan segera menghubungi Anda via WhatsApp untuk konfirmasi dan detail harga.</p>
+      <div class="contact-info">
+        <div class="contact-item">
+          <span>📱</span>
+          <div>
+            <strong>WhatsApp</strong>
+            <p>+62 812-3456-7890</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span>📍</span>
+          <div>
+            <strong>Lokasi Base</strong>
+            <p>Magetan, Jawa Timur</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span>🕐</span>
+          <div>
+            <strong>Jam Operasional</strong>
+            <p>24 Jam / 7 Hari</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="booking-right">
+      <div class="booking-form" id="bookingForm">
+        <div class="form-group">
+          <label>Nama Lengkap *</label>
+          <input type="text" id="fName" placeholder="Masukkan nama Anda">
+        </div>
+        <div class="form-group">
+          <label>Nomor WhatsApp *</label>
+          <input type="tel" id="fPhone" placeholder="08xxxxxxxxxx">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Jenis Kendaraan *</label>
+            <select id="fVehicle">
+              <option value="">-- Pilih Armada --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Jumlah Penumpang</label>
+            <input type="number" id="fPassenger" placeholder="Jumlah orang" min="1">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tanggal Berangkat *</label>
+            <input type="date" id="fDate">
+          </div>
+          <div class="form-group">
+            <label>Jam Berangkat</label>
+            <input type="time" id="fTime">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Tujuan / Destinasi *</label>
+          <input type="text" id="fDestination" placeholder="Contoh: Bromo, Borobudur, dll">
+        </div>
+        <div class="form-group">
+          <label>Titik Jemput</label>
+          <input type="text" id="fPickup" placeholder="Alamat penjemputan">
+        </div>
+        <div class="form-group">
+          <label>Catatan Tambahan</label>
+          <textarea id="fNotes" placeholder="Kebutuhan khusus, request, dll" rows="3"></textarea>
+        </div>
+        <button class="btn-primary btn-full" onclick="submitBooking()">
+          <span>📱</span> Kirim via WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAP -->
+<section id="map" class="section map-section">
+  <div class="section-header">
+    <div class="section-tag">Lokasi Kami</div>
+    <h2 class="section-title">Area <span class="gold-text">Operasional</span></h2>
+    <p class="section-desc">Berbasis di Magetan, melayani seluruh wilayah Madiun Raya dan sekitarnya</p>
+  </div>
+  <div class="map-wrap">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126673.57894017432!2d111.34726!3d-7.64!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e79b0c6c1a0a8e7%3A0x3e46b94bce3b21c5!2sMagetan%2C%20Jawa%20Timur!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"
+      allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <span class="logo-mark">ET</span>
+        <div>
+          <span class="logo-main">Every Transport</span>
+          <span class="logo-sub">Travel & Wisata</span>
+        </div>
+      </div>
+      <p>Mitra perjalanan terpercaya untuk wisata alam dan religi di Jawa Timur, Tengah & Barat.</p>
+      <div class="footer-social">
+        <a href="#">📘</a>
+        <a href="#">📸</a>
+        <a href="#">🎵</a>
+        <a href="https://wa.me/6281234567890" target="_blank">📱</a>
+      </div>
+    </div>
+    <div class="footer-links">
+      <h4>Menu</h4>
+      <a href="#home">Beranda</a>
+      <a href="#armada">Armada</a>
+      <a href="#wisata">Destinasi</a>
+      <a href="#visi-misi">Tentang Kami</a>
+      <a href="#testimoni">Testimoni</a>
+      <a href="#booking">Booking</a>
+    </div>
+    <div class="footer-links">
+      <h4>Layanan</h4>
+      <a href="#">Wisata Alam</a>
+      <a href="#">Wisata Religi</a>
+      <a href="#">Antar Jemput Bandara</a>
+      <a href="#">Wisata Ziarah</a>
+      <a href="#">Perjalanan Bisnis</a>
+      <a href="#">Sewa Harian</a>
+    </div>
+    <div class="footer-contact">
+      <h4>Hubungi Kami</h4>
+      <p>📍 Magetan, Jawa Timur 63300</p>
+      <p>📱 +62 812-3456-7890</p>
+      <p>📧 info@everytransport.id</p>
+      <p>🕐 24 Jam / 7 Hari</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Every Transport. Semua Hak Dilindungi.</p>
+    <a href="#admin" class="admin-link">⚙ Admin Panel</a>
+  </div>
+</footer>
+
+<!-- ADMIN PANEL -->
+<div id="admin" class="admin-overlay">
+  <div class="admin-container">
+    <div class="admin-header">
+      <div>
+        <div class="logo-mark" style="display:inline-flex;margin-right:10px">ET</div>
+        <span style="font-size:1.2rem;font-weight:600">Admin Dashboard</span>
+      </div>
+      <button onclick="closeAdmin()" class="modal-close" style="position:static">✕</button>
+    </div>
+
+    <!-- Login -->
+    <div id="adminLogin" class="admin-section">
+      <h3>Login Admin</h3>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="adminUser" placeholder="admin">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="adminPass" placeholder="••••••••">
+      </div>
+      <button class="btn-primary" onclick="adminLogin()">Masuk</button>
+      <p style="font-size:.8rem;opacity:.5;margin-top:10px">Demo: admin / admin123</p>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="adminDashboard" class="admin-section" style="display:none">
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchTab('vehicles')">🚌 Kendaraan</button>
+        <button class="admin-tab" onclick="switchTab('addVehicle')">➕ Tambah</button>
+      </div>
+
+      <!-- Vehicle List Tab -->
+      <div id="tabVehicles" class="admin-tab-content">
+        <h3>Daftar Armada</h3>
+        <div id="adminVehicleList"></div>
+      </div>
+
+      <!-- Add/Edit Vehicle Tab -->
+      <div id="tabAddVehicle" class="admin-tab-content" style="display:none">
+        <h3 id="addVehicleTitle">Tambah Kendaraan</h3>
+        <div class="form-group">
+          <label>Nama Kendaraan *</label>
+          <input type="text" id="editName" placeholder="Contoh: Toyota Avanza">
+        </div>
+        <div class="form-group">
+          <label>Kapasitas Penumpang</label>
+          <input type="text" id="editCapacity" placeholder="Contoh: 7 Penumpang">
+        </div>
+        <div class="form-group">
+          <label>Harga Mulai (Rp)</label>
+          <input type="text" id="editPrice" placeholder="Contoh: Rp 350.000 / hari">
+        </div>
+        <div class="form-group">
+          <label>Deskripsi</label>
+          <textarea id="editDesc" rows="3" placeholder="Deskripsi singkat kendaraan"></textarea>
+        </div>
+        <div class="form-group">
+          <label>URL Foto Kendaraan</label>
+          <input type="text" id="editPhoto" placeholder="https://...">
+          <small style="opacity:.5">Gunakan link gambar dari Google/Unsplash</small>
+        </div>
+        <div class="form-group">
+          <label>Fitur (pisahkan dengan koma)</label>
+          <input type="text" id="editFeatures" placeholder="AC, Audio, Bagasi Luas">
+        </div>
+        <input type="hidden" id="editIndex" value="-1">
+        <div style="display:flex;gap:10px">
+          <button class="btn-primary" onclick="saveVehicle()">💾 Simpan</button>
+          <button class="btn-outline" onclick="cancelEdit()">Batal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WA FLOAT -->
+<a href="https://wa.me/6281234567890?text=Halo%20Every%20Transport,%20saya%20ingin%20booking%20kendaraan" 
+   class="wa-float" target="_blank">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script src="app.js"></script>
+</body>
+</html>
