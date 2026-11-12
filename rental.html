@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard Rental dan Charter</title>
+<style>
+:root{
+  --bg:#f2f4f8; --surface:#ffffff; --surface-2:#f7f9fc; --text:#101c33; --muted:#5d6b82; --line:#e1e6ef;
+  --side:#101c33; --side-text:#b4c0d8;
+  --plate:#f6c524; --plate-ink:#161616;
+  --btn:#101c33; --btn-text:#ffffff;
+  --primary:#1d5fd1; --blue:#1d5fd1; --blue-soft:#e3edff;
+  --green:#0f7a55; --green-soft:#dcf5ea; --amber:#8a5a00; --amber-soft:#fdf0c8;
+  --red:#b42318; --red-soft:#fde6e3; --slate:#475467; --slate-soft:#e9edf3;
+  --bar-in:#1f8a63; --bar-out:#d64545;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0b1322; --surface:#121c30; --surface-2:#172339; --text:#e9eef8; --muted:#97a5bd; --line:#24324c;
+    --side:#08101f; --side-text:#a9b6cf;
+    --btn:#f6c524; --btn-text:#161616;
+    --primary:#6ea0ff; --blue:#8db5ff; --blue-soft:#192b52;
+    --green:#4fd19c; --green-soft:#12372b; --amber:#f5c542; --amber-soft:#3a2f0e;
+    --red:#ff8a80; --red-soft:#3d1b1d; --slate:#b6c1d6; --slate-soft:#212e47;
+    --bar-in:#34b27f; --bar-out:#ef6a6a;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14.5px;line-height:1.5;-webkit-text-size-adjust:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+h1{font-size:22px;font-weight:650;letter-spacing:-.01em}
+h2{font-size:16px;font-weight:650}
+h3{font-size:15.5px;font-weight:650}
+a{color:var(--primary)}
+.muted{color:var(--muted)}
+.sub{color:var(--muted);font-size:13px}
+
+/* Layout */
+.app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}
+.sidebar{background:var(--side);color:var(--side-text);position:sticky;top:0;height:100vh;overflow-y:auto;padding:20px 14px;display:flex;flex-direction:column;gap:22px}
+.brand{display:flex;align-items:center;gap:12px;padding:0 6px}
+.logo{background:var(--plate);color:var(--plate-ink);border:2px solid #161616;border-radius:7px;padding:3px 8px;font-weight:800;letter-spacing:.05em;font-family:"Arial Narrow",Arial,sans-serif}
+.brand b{display:block;color:#fff;font-size:15px;line-height:1.2}
+.brand small{font-size:12.5px;color:var(--side-text)}
+.nav{display:flex;flex-direction:column;gap:3px}
+.nav-btn{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border:0;background:transparent;color:inherit;border-radius:9px;text-align:left;font-size:14.5px}
+.nav-btn svg{width:19px;height:19px;flex:none}
+.nav-btn:hover{background:rgba(255,255,255,.06)}
+.nav-btn.active{background:rgba(255,255,255,.1);color:#fff;font-weight:600;box-shadow:inset 3px 0 0 var(--plate)}
+.side-foot{margin-top:auto;font-size:12.5px;padding:0 6px;color:var(--side-text)}
+.main{padding:0 28px 48px;min-width:0}
+.topbar{display:flex;align-items:center;gap:14px;padding:22px 0 18px}
+.topbar .ttl{flex:1;min-width:0}
+.topbar p{color:var(--muted);font-size:13.5px}
+.menu-btn{display:none;border:1px solid var(--line);background:var(--surface);border-radius:9px;width:40px;height:40px;font-size:18px}
+.scrim{display:none}
+.banner{background:var(--amber-soft);color:var(--amber);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13.5px}
+
+/* Components */
+.btn{background:var(--btn);color:var(--btn-text);border:0;border-radius:9px;padding:9px 16px;font-weight:650;white-space:nowrap}
+.btn:hover{filter:brightness(1.1)}
+.btn-line{background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:9px;padding:9px 14px;font-weight:600;white-space:nowrap}
+.btn-line:hover{background:var(--surface-2)}
+.btn-sm{background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:7px;padding:4px 11px;font-size:13px;font-weight:600}
+.btn-sm:hover{background:var(--surface-2)}
+.btn-danger{background:var(--red-soft);color:var(--red);border:0;border-radius:9px;padding:9px 14px;font-weight:600}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.link{background:none;border:0;color:var(--primary);font-weight:600;font-size:13.5px;padding:2px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:14px;margin-bottom:14px}
+.kpi .l{color:var(--muted);font-size:13.5px}
+.kpi .v{font-size:25px;font-weight:700;margin:2px 0;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.kpi .sub{font-size:12.5px}
+.kpi.in .v{color:var(--green)} .kpi.out .v{color:var(--red)}
+.grid2{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:14px;margin-bottom:14px}
+.grid2.even{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:14px;margin-bottom:14px}
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.s-akan{background:var(--blue-soft);color:var(--blue)}
+.s-berjalan{background:var(--amber-soft);color:var(--amber)}
+.s-selesai{background:var(--green-soft);color:var(--green)}
+.s-batal{background:var(--red-soft);color:var(--red)}
+.p-lunas{background:var(--green-soft);color:var(--green)}
+.p-dp{background:var(--amber-soft);color:var(--amber)}
+.p-belum{background:var(--red-soft);color:var(--red)}
+.t-Rental{background:var(--slate-soft);color:var(--slate)}
+.t-Charter{background:var(--blue-soft);color:var(--blue)}
+.t-Paket{background:var(--amber-soft);color:var(--amber)}
+.plate{display:inline-block;background:var(--plate);color:var(--plate-ink);border:2px solid #161616;border-radius:5px;padding:0 7px;font-weight:800;letter-spacing:.06em;font-size:12.5px;line-height:1.5;font-family:"Arial Narrow",Arial,sans-serif;white-space:nowrap}
+.empty{padding:26px 10px;text-align:center;color:var(--muted)}
+
+/* Daftar jadwal */
+.item{display:flex;align-items:center;gap:12px;padding:11px 8px;border-top:1px solid var(--line);cursor:pointer;border-radius:8px}
+.item:first-of-type{border-top:0}
+.item:hover{background:var(--surface-2)}
+.datebox{flex:none;width:48px;text-align:center;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:4px 0;line-height:1.15}
+.datebox b{display:block;font-size:18px}
+.datebox span{font-size:12px;color:var(--muted)}
+.item-main{flex:1;min-width:0}
+.item-title{font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-sub{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-right{text-align:right;flex:none}
+.item-right .amt{font-weight:650;font-variant-numeric:tabular-nums;font-size:13.5px}
+
+/* Tabel */
+.tbl-wrap{overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-weight:600;color:var(--muted);text-align:left;font-size:13px;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tr.click{cursor:pointer}
+.tbl tr.click:hover td{background:var(--surface-2)}
+.num{text-align:right!important;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pos{color:var(--green)} .neg{color:var(--red)}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.toolbar .grow{flex:1;min-width:180px}
+.toolbar .sp{flex:1}
+
+/* Form */
+input,select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:100%}
+textarea{resize:vertical;min-height:70px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field.full{grid-column:1/-1}
+.field label{display:block;font-weight:600;font-size:13px;margin-bottom:5px}
+.field .hint{font-size:12.5px;color:var(--muted);margin-top:4px}
+.hidden{display:none!important}
+.modal-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;margin-top:20px}
+
+/* Modal */
+.modal-wrap{position:fixed;inset:0;background:rgba(7,12,24,.6);display:none;align-items:flex-start;justify-content:center;padding:4vh 14px;overflow-y:auto;z-index:60}
+.modal-wrap.open{display:flex}
+.modal{background:var(--surface);border-radius:14px;width:min(680px,100%);border:1px solid var(--line)}
+.modal-h{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line)}
+.modal-b{padding:20px}
+.x{background:none;border:0;font-size:22px;line-height:1;color:var(--muted);padding:2px 8px}
+.dl{display:grid;grid-template-columns:130px 1fr;gap:9px 14px}
+.dl dt{color:var(--muted)}
+.dl dd{font-weight:550;min-width:0;overflow-wrap:anywhere}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--btn);color:var(--btn-text);padding:10px 18px;border-radius:10px;font-weight:600;z-index:90;display:none;max-width:90vw}
+.toast.show{display:block}
+.toast.err{background:var(--red);color:#fff}
+
+/* Grafik */
+.legend{display:flex;gap:16px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+.chart{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:8px}
+.bg{text-align:center}
+.bars{height:170px;display:flex;align-items:flex-end;justify-content:center;gap:5px;border-bottom:1px solid var(--line)}
+.bar{width:min(26px,38%);border-radius:5px 5px 0 0;min-height:3px}
+.bar.in{background:var(--bar-in)} .bar.out{background:var(--bar-out)}
+.bl{font-size:13px;margin-top:6px;font-weight:600}
+.bv{font-size:12.5px;font-variant-numeric:tabular-nums}
+.meter{height:8px;background:var(--slate-soft);border-radius:6px;overflow:hidden;margin-top:6px}
+.meter i{display:block;height:100%;background:var(--primary);border-radius:6px}
+.fleet-row{padding:9px 0;border-top:1px solid var(--line)}
+.fleet-row:first-child{border-top:0}
+.fleet-row .top{display:flex;justify-content:space-between;gap:10px}
+
+/* Tab */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.tab{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 15px;font-weight:600;color:var(--muted)}
+.tab.active{background:var(--btn);color:var(--btn-text);border-color:var(--btn)}
+.tab b{margin-left:6px;font-weight:700}
+
+/* Kalender */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal-dow{font-size:12.5px;font-weight:600;color:var(--muted);text-align:center;padding:4px 0}
+.cal-cell{min-height:82px;border:1px solid var(--line);border-radius:8px;padding:5px;display:flex;flex-direction:column;gap:3px;background:var(--surface);position:relative;overflow:hidden}
+.cal-cell.off{background:transparent;border-color:transparent}
+.cal-cell.has{cursor:pointer}
+.cal-cell.has:hover{background:var(--surface-2)}
+.cal-cell.today{border:2px solid var(--plate)}
+.cal-cell b{font-size:13px}
+.chip{font-size:11.5px;border-radius:5px;padding:0 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.cal-cell .more{font-size:11.5px;color:var(--muted)}
+.cal-cell .cnt{display:none}
+
+/* Armada dan paket */
+.vname{display:flex;align-items:center;gap:12px}
+.vi{font-size:24px;width:40px;height:40px;display:grid;place-items:center;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;flex:none}
+.plates{display:flex;flex-wrap:wrap;gap:6px}
+.note{margin-top:14px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px;color:var(--muted)}
+.paket-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.paket .ph{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.paket .dest{margin-top:10px;font-weight:550}
+.paket .desc{color:var(--muted);font-size:13.5px;margin:4px 0 12px}
+.prices{border-top:1px solid var(--line)}
+.pr{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}
+.pr:last-child{border-bottom:0}
+.pr b{font-variant-numeric:tabular-nums}
+.bar-row{margin-bottom:12px}
+.bar-row .top{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+
+@media (max-width:1000px){
+  .grid2,.grid2.even{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .sidebar{position:fixed;left:0;top:0;width:260px;z-index:70;transform:translateX(-100%);transition:transform .2s}
+  .sidebar.open{transform:none}
+  .scrim.show{display:block;position:fixed;inset:0;background:rgba(7,12,24,.55);z-index:65}
+  .menu-btn{display:block}
+  .main{padding:0 16px 40px}
+  .topbar .btn{padding:9px 12px}
+}
+@media (max-width:620px){
+  .form{grid-template-columns:1fr}
+  .dl{grid-template-columns:105px 1fr}
+  .cal-cell{min-height:54px;align-items:center;padding:4px 2px}
+  .cal-cell .chip,.cal-cell .more{display:none}
+  .cal-cell .cnt{display:inline-block;background:var(--btn);color:var(--btn-text);border-radius:999px;font-size:11.5px;padding:0 7px;font-weight:700}
+  h1{font-size:19px}
+  .topbar p{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  .sidebar,.topbar .btn,.no-print,.scrim,.menu-btn,.btn-sm,.toast{display:none!important}
+  .app{display:block} .main{padding:0} body{background:#fff;color:#000}
+  .card{border-color:#999}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo">RC</div>
+      <div><b id="brandName">Rental dan Charter</b><small>Pendataan armada</small></div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot" id="sideFoot"></div>
+  </aside>
+  <div class="scrim" id="scrim" onclick="toggleMenu(false)"></div>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-btn" type="button" aria-label="Buka menu" onclick="toggleMenu(true)">&#9776;</button>
+      <div class="ttl"><h1 id="pageTitle"></h1><p id="pageSub"></p></div>
+      <button class="btn" type="button" onclick="openBooking()">+ Pemesanan baru</button>
+    </header>
+    <div id="notice"></div>
+    <section id="view"></section>
+  </main>
+</div>
+
+<div class="modal-wrap" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-h"><h2 id="modalTitle"></h2><button class="x" type="button" aria-label="Tutup" onclick="closeModal()">&times;</button></div>
+    <div class="modal-b" id="modalBody"></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+'use strict';
+
+/* ================= Konstanta & utilitas ================= */
+const KEY = 'rentalcharter_dashboard_v1';
+const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const HARI = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const KAT_MASUK = ['Pembayaran sewa','Pendapatan lain'];
+const KAT_KELUAR = ['BBM','Gaji dan honor driver','Perawatan dan servis','Tol dan parkir','Pajak dan asuransi','Operasional kantor','Lain-lain'];
+const ICONS = {
+  dashboard:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  jadwal:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/>',
+  pemesanan:'<path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z"/><rect x="5" y="6" width="14" height="15" rx="2"/><path d="M9 12h6M9 16h4"/>',
+  armada:'<path d="M5 16l1.5-5a2 2 0 0 1 1.9-1.4h7.2a2 2 0 0 1 1.9 1.4L19 16"/><rect x="3" y="16" width="18" height="4" rx="1.5"/><path d="M7 18h.01M17 18h.01"/>',
+  paket:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+  keuangan:'<rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/>',
+  pengaturan:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>'
+};
+const NAV = [
+  {id:'dashboard', label:'Dashboard'},
+  {id:'jadwal', label:'Jadwal'},
+  {id:'pemesanan', label:'Pemesanan'},
+  {id:'armada', label:'Armada dan harga sewa'},
+  {id:'paket', label:'Paket liburan'},
+  {id:'keuangan', label:'Keuangan'},
+  {id:'pengaturan', label:'Pengaturan'}
+];
+
+const el = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, '0');
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function iso(d){ return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+function todayISO(){ return iso(new Date()); }
+function addDays(s, n){ const p = s.split('-').map(Number); return iso(new Date(p[0], p[1] - 1, p[2] + n)); }
+function diffDays(a, b){
+  const x = a.split('-').map(Number), y = b.split('-').map(Number);
+  return Math.round((Date.UTC(y[0], y[1] - 1, y[2]) - Date.UTC(x[0], x[1] - 1, x[2])) / 86400000);
+}
+function fmtDate(s){ if(!s) return '-'; const p = s.split('-').map(Number); return p[2] + ' ' + BULAN[p[1] - 1].slice(0, 3) + ' ' + p[0]; }
+function rupiah(n){
+  n = Math.round(Number(n) || 0);
+  const neg = n < 0;
+  return (neg ? '-' : '') + 'Rp ' + String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+function jt(n){
+  const a = Math.abs(n); let s;
+  if(a >= 1000000) s = (a / 1000000).toFixed(1).replace('.', ',').replace(',0', '') + ' jt';
+  else if(a >= 1000) s = Math.round(a / 1000) + ' rb';
+  else s = String(a);
+  return (n < 0 ? '-' : '') + s;
+}
+function svg(name){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[name] + '</svg>'; }
+function plate(u){ return u ? '<span class="plate">' + esc(u) + '</span>' : ''; }
+function shortName(a){ return a ? a.nama.replace('Toyota ', '').replace('Isuzu ', '') : '-'; }
+function durLabel(h){ return h === 1 ? '1 hari (one day trip)' : h + ' hari ' + (h - 1) + ' malam'; }
+
+/* ================= Penyimpanan ================= */
+let db = null;
+let memStore = null;
+let storageOK = true;
+
+function loadDB(){
+  let raw = null;
+  try { raw = localStorage.getItem(KEY); } catch(e) { storageOK = false; }
+  if(!raw && memStore) raw = memStore;
+  if(raw){
+    try {
+      const o = JSON.parse(raw);
+      if(o && o.armada && o.bookings && o.trx && o.paket && o.settings && o.seq) return o;
+    } catch(e) {}
+  }
+  return null;
+}
+function saveDB(){
+  const s = JSON.stringify(db);
+  memStore = s;
+  try { localStorage.setItem(KEY, s); } catch(e) { storageOK = false; }
+}
+
+/* ================= Data contoh ================= */
+function newBookingId(){ db.seq.b += 1; return 'RC-' + String(db.seq.b).padStart(4, '0'); }
+function addTrx(t){ db.seq.t += 1; t.id = 'TX-' + String(db.seq.t).padStart(4, '0'); db.trx.push(t); return t; }
+
+function buildSeed(){
+  const T = todayISO();
+  const D = n => addDays(T, n);
+  db = {
+    settings:{
+      nama:'Sinar Jaya Trans', telp:'0812-0000-0000', alamat:'Jl. Contoh Raya No. 12, Jakarta',
+      catatanHarga:'Harga sudah termasuk driver. BBM, tol, parkir, dan makan driver ditanggung penyewa. Kelebihan jam dikenakan tarif lembur per jam. Harga contoh awal, silakan sesuaikan dengan tarif Anda.',
+      catatanPaket:'Harga paket per unit kendaraan, sudah termasuk driver, BBM, tol, dan parkir. Belum termasuk tiket wisata, penginapan, dan makan. Harga contoh awal, silakan sesuaikan.'
+    },
+    armada:[
+      {id:'avanza', nama:'Toyota Avanza', kategori:'Mobil keluarga', kursi:7, icon:'🚗', harga12:550000, harga24:750000, lebih:50000, units:['B 1234 KJA','B 2345 KJB','B 3456 KJC']},
+      {id:'innova', nama:'Toyota Innova Reborn', kategori:'Mobil keluarga premium', kursi:7, icon:'🚙', harga12:700000, harga24:950000, lebih:60000, units:['B 1456 TXA','B 1567 TXB','B 1678 TXC']},
+      {id:'commuter', nama:'Toyota Hiace Commuter', kategori:'Minibus', kursi:15, icon:'🚐', harga12:1300000, harga24:1700000, lebih:100000, units:['B 7123 UEA','B 7234 UEB']},
+      {id:'premio', nama:'Toyota Hiace Premio', kategori:'Minibus premium', kursi:14, icon:'🚐', harga12:1600000, harga24:2100000, lebih:125000, units:['B 7345 UFA','B 7456 UFB']},
+      {id:'elf', nama:'Isuzu Elf Giga', kategori:'Microbus', kursi:19, icon:'🚐', harga12:1200000, harga24:1600000, lebih:100000, units:['B 7567 UGA','B 7678 UGB']},
+      {id:'busmed', nama:'Bus Medium', kategori:'Bus pariwisata', kursi:31, icon:'🚌', harga12:2600000, harga24:3400000, lebih:175000, units:['B 7789 BMA','B 7890 BMB']},
+      {id:'bigbus', nama:'Big Bus', kategori:'Bus pariwisata besar', kursi:59, icon:'🚌', harga12:3800000, harga24:4800000, lebih:250000, units:['B 7901 BBA','B 7012 BBB']}
+    ],
+    paket:[
+      {id:'puncak', nama:'Puncak dan Bogor', hari:1, destinasi:'Taman Safari, Gunung Mas, Taman Bunga Nusantara', deskripsi:'Wisata sehari, berangkat pagi dan pulang malam.',
+        prices:{avanza:900000, innova:1200000, commuter:1700000, premio:2100000, elf:1800000, busmed:3000000, bigbus:4200000}},
+      {id:'bandung', nama:'Bandung dan Lembang', hari:2, destinasi:'Lembang, Tangkuban Parahu, Kawah Putih, Dago, wisata kuliner', deskripsi:'Cocok untuk keluarga dan arisan, jemput di area Jabodetabek.',
+        prices:{avanza:1700000, innova:2100000, commuter:3000000, premio:3600000, elf:3200000, busmed:5500000, bigbus:7500000}},
+      {id:'jogja', nama:'Yogyakarta', hari:3, destinasi:'Malioboro, Keraton, Prambanan, Borobudur, Parangtritis', deskripsi:'Paket klasik Jogja dengan waktu bebas belanja oleh-oleh.',
+        prices:{avanza:4200000, innova:5000000, commuter:6800000, premio:8000000, elf:7200000, busmed:11500000, bigbus:15000000}},
+      {id:'walisongo', nama:'Wisata religi Wali Songo', hari:3, destinasi:'Cirebon, Demak, Kudus, Gresik, Surabaya', deskripsi:'Ziarah makam wali di Jawa Tengah dan Jawa Timur.',
+        prices:{avanza:3900000, innova:4700000, commuter:6300000, premio:7500000, elf:6700000, busmed:10500000, bigbus:14000000}},
+      {id:'bromo', nama:'Malang dan Bromo', hari:4, destinasi:'Batu, Museum Angkut, sunrise Bromo, Malang', deskripsi:'Biaya jeep Bromo dihitung terpisah.',
+        prices:{avanza:6500000, innova:7500000, commuter:10500000, premio:12500000, elf:11000000, busmed:17500000, bigbus:23000000}},
+      {id:'bali', nama:'Bali', hari:5, destinasi:'Kuta, Uluwatu, Ubud, Tanah Lot, Kintamani', deskripsi:'Biaya penyeberangan kendaraan sudah termasuk.',
+        prices:{avanza:9500000, innova:11000000, commuter:15000000, premio:18000000, elf:16000000, busmed:25000000, bigbus:34000000}}
+    ],
+    bookings:[], trx:[], seq:{b:0, t:0}
+  };
+
+  // [jenis, armada, indeks unit, paket, durasi, mulai, selesai, pelanggan, telp, tujuan, pembayaran[[hari, bagian, label]], batal]
+  const rows = [
+    ['Rental','avanza',0,'','24',-150,-149,'Rina Wulandari','0812-3456-7801','Dalam kota Jakarta',[[-152,.5,'DP'],[-149,.5,'Pelunasan']]],
+    ['Paket Liburan','innova',0,'jogja','24',-125,-123,'Keluarga Hartono','0813-2211-4509','Paket Yogyakarta',[[-128,.4,'DP'],[-123,.6,'Pelunasan']]],
+    ['Charter','busmed',0,'','24',-98,-98,'PT Mitra Sejahtera','021-5550-1122','Gathering kantor ke Puncak',[[-103,.5,'DP'],[-98,.5,'Pelunasan']]],
+    ['Rental','commuter',0,'','24',-72,-70,'Agus Salim','0856-9087-1123','Antar jemput keluarga Bandung',[[-75,.3,'DP'],[-70,.7,'Pelunasan']]],
+    ['Charter','bigbus',0,'','24',-52,-50,'SMAN 2 Bogor','0251-8330-044','Study tour Yogyakarta dan Solo',[[-70,.3,'DP'],[-55,.4,'Cicilan'],[-50,.3,'Pelunasan']]],
+    ['Rental','innova',1,'','24',-33,-32,'Dewi Lestari','0878-4455-6120','Dalam kota dan tol Cipularang',[[-33,1,'Lunas']]],
+    ['Paket Liburan','premio',0,'bali','24',-28,-24,'Keluarga Tanoto','0811-8800-2345','Paket Bali',[[-40,.5,'DP'],[-24,.5,'Pelunasan']]],
+    ['Rental','elf',0,'','12',-15,-15,'Komunitas Sepeda Bekasi','0821-7766-3490','Gowes dan wisata Puncak',[[-16,.5,'DP']]],
+    ['Charter','premio',1,'','24',-9,-8,'Siti Rahma','0895-3322-8801','Ziarah ke Cirebon',[[-10,.5,'DP'],[-8,.5,'Pelunasan']]],
+    ['Rental','avanza',1,'','24',-1,1,'Hendra Gunawan','0857-1200-4476','Luar kota Bandung',[[-2,.5,'DP']]],
+    ['Charter','busmed',1,'','24',0,0,'Yayasan Al-Hikmah','021-8770-3321','Wisata edukasi Taman Mini',[[-5,.5,'DP']]],
+    ['Paket Liburan','innova',1,'jogja','24',3,5,'Keluarga Prasetyo','0813-9090-1212','Paket Yogyakarta',[[-1,.4,'DP']]],
+    ['Charter','bigbus',1,'','24',7,9,'Majelis Taklim Nurul Iman','0852-6611-9034','Wisata religi Wali Songo',[[-3,.3,'DP']]],
+    ['Rental','commuter',1,'','24',12,13,'PT Karya Mandiri','021-4440-7788','Kunjungan pabrik Karawang',[]],
+    ['Paket Liburan','avanza',2,'bandung','24',20,21,'Sari dan Fajar','0877-2345-6780','Paket Bandung dan Lembang',[[0,.5,'DP']]],
+    ['Rental','innova',2,'','12',26,26,'Michael Tan','0812-7788-9900','Antar jemput bandara',[]],
+    ['Rental','elf',1,'','24',10,11,'Ratna Dewi','0819-5544-3322','Wisata keluarga Anyer',[],true]
+  ];
+  rows.forEach(r => {
+    const a = db.armada.find(x => x.id === r[1]);
+    const f = {jenis:r[0], armadaId:r[1], durasi:r[4], mulai:D(r[5]), selesai:D(r[6]), paketId:r[3]};
+    const total = calcTotal(f);
+    const id = newBookingId();
+    db.bookings.push({id:id, jenis:r[0], pelanggan:r[7], telp:r[8], armadaId:r[1], unit:a.units[r[2]] || '', paketId:r[3],
+      durasi:r[4], tujuan:r[9], mulai:f.mulai, selesai:f.selesai, jam:'07:00', total:total, catatan:'', batal:!!r[11], dibuat:D(r[5] - 10)});
+    r[10].forEach(p => addTrx({tanggal:D(p[0]), tipe:'masuk', kategori:'Pembayaran sewa', ket:p[2] + ' ' + id + ' - ' + r[7],
+      jumlah:Math.round(total * p[1] / 1000) * 1000, ref:id}));
+  });
+
+  const exp = [
+    [-150,'BBM','BBM Avanza dan Innova',350000],[-148,'Gaji dan honor driver','Honor driver trip Jakarta',400000],
+    [-140,'Perawatan dan servis','Servis berkala Avanza',850000],[-125,'BBM','BBM trip Yogyakarta',1100000],
+    [-124,'Tol dan parkir','Tol dan parkir trip Yogyakarta',650000],[-123,'Gaji dan honor driver','Honor driver trip Yogyakarta',900000],
+    [-120,'Operasional kantor','Listrik, internet, dan ATK',750000],[-98,'BBM','Solar bus medium',700000],
+    [-98,'Gaji dan honor driver','Honor driver dan kernet',600000],[-90,'Pajak dan asuransi','Perpanjang STNK Hiace',2200000],
+    [-75,'BBM','BBM Hiace trip Bandung',650000],[-72,'Tol dan parkir','Tol Cipularang',300000],
+    [-70,'Gaji dan honor driver','Honor driver Hiace',750000],[-60,'Operasional kantor','Listrik, internet, dan ATK',750000],
+    [-52,'BBM','Solar big bus study tour',4200000],[-51,'Tol dan parkir','Tol dan parkir study tour',1800000],
+    [-50,'Gaji dan honor driver','Honor driver dan kernet big bus',2100000],[-45,'Perawatan dan servis','Ganti ban bus medium',3600000],
+    [-33,'BBM','BBM Innova',450000],[-30,'Operasional kantor','Listrik, internet, dan ATK',750000],
+    [-27,'BBM','BBM paket Bali',3200000],[-26,'Tol dan parkir','Tol, parkir, dan penyeberangan Bali',1400000],
+    [-24,'Gaji dan honor driver','Honor driver paket Bali',2400000],[-20,'Perawatan dan servis','Servis Elf Giga',1250000],
+    [-15,'BBM','BBM Elf trip Puncak',300000],[-9,'BBM','BBM Hiace Premio',700000],
+    [-8,'Gaji dan honor driver','Honor driver ziarah Cirebon',600000],[-3,'Perawatan dan servis','Cuci dan detailing armada',500000],
+    [-1,'Operasional kantor','Listrik, internet, dan ATK',750000]
+  ];
+  exp.forEach(e => addTrx({tanggal:D(e[0]), tipe:'keluar', kategori:e[1], ket:e[2], jumlah:e[3], ref:''}));
+  return db;
+}
+
+/* ================= Logika bisnis ================= */
+function statusOf(b){
+  if(b.batal) return 'batal';
+  const t = todayISO();
+  if(t < b.mulai) return 'akan';
+  if(t > b.selesai) return 'selesai';
+  return 'berjalan';
+}
+const ST_LABEL = {akan:'Akan mulai', berjalan:'Sedang berjalan', selesai:'Selesai', batal:'Dibatalkan'};
+function stBadge(s){ return '<span class="badge s-' + s + '">' + ST_LABEL[s] + '</span>'; }
+function jenisKey(j){ return j === 'Paket Liburan' ? 'Paket' : j; }
+function jenisBadge(j){ return '<span class="badge t-' + jenisKey(j) + '">' + esc(j) + '</span>'; }
+function getB(id){ return db.bookings.find(b => b.id === id) || null; }
+function armadaOf(b){ return db.armada.find(a => a.id === b.armadaId) || null; }
+function paketOf(b){ return db.paket.find(p => p.id === b.paketId) || null; }
+function hariB(b){ return Math.max(1, diffDays(b.mulai, b.selesai) + 1); }
+function rentang(b){ return b.mulai === b.selesai ? fmtDate(b.mulai) : fmtDate(b.mulai) + ' sampai ' + fmtDate(b.selesai); }
+function paidOf(id){ return db.trx.filter(t => t.tipe === 'masuk' && t.ref === id).reduce((s, t) => s + t.jumlah, 0); }
+function payState(b){
+  const paid = paidOf(b.id);
+  if(b.batal) return {k:'batal', t:'-'};
+  if(paid >= b.total) return {k:'lunas', t:'Lunas'};
+  if(paid > 0) return {k:'dp', t:'Dibayar sebagian'};
+  return {k:'belum', t:'Belum dibayar'};
+}
+function payBadge(b){
+  const p = payState(b);
+  return p.k === 'batal' ? '<span class="muted">-</span>' : '<span class="badge p-' + p.k + '">' + p.t + '</span>';
+}
+function piutangList(){
+  return db.bookings.filter(b => !b.batal).map(b => ({b:b, sisa:b.total - paidOf(b.id)})).filter(x => x.sisa > 0)
+    .sort((x, y) => x.b.mulai.localeCompare(y.b.mulai));
+}
+function totalPiutang(){ return piutangList().reduce((s, x) => s + x.sisa, 0); }
+function layananLabel(b){
+  if(b.jenis === 'Rental') return 'Rental ' + b.durasi + ' jam';
+  if(b.jenis === 'Paket Liburan'){ const p = paketOf(b); return p ? p.nama : 'Paket liburan'; }
+  return 'Charter';
+}
+function calcTotal(f){
+  const a = db.armada.find(x => x.id === f.armadaId);
+  if(!a || !f.mulai || !f.selesai) return 0;
+  const h = Math.max(1, diffDays(f.mulai, f.selesai) + 1);
+  if(f.jenis === 'Paket Liburan'){ const p = db.paket.find(x => x.id === f.paketId); return p ? (p.prices[a.id] || 0) : 0; }
+  if(f.jenis === 'Rental') return (String(f.durasi) === '12' ? a.harga12 : a.harga24) * h;
+  return a.harga24 * h;
+}
+function bentrok(armadaId, unit, mulai, selesai, exceptId){
+  if(!unit) return [];
+  return db.bookings.filter(b => !b.batal && b.id !== exceptId && b.armadaId === armadaId && b.unit === unit && b.mulai <= selesai && b.selesai >= mulai);
+}
+function monthSums(key){
+  let inc = 0, exp = 0;
+  db.trx.forEach(t => { if(t.tanggal.slice(0, 7) === key){ if(t.tipe === 'masuk') inc += t.jumlah; else exp += t.jumlah; } });
+  return {inc:inc, exp:exp};
+}
+function lastMonths(n){
+  const now = new Date(), arr = [];
+  for(let i = n - 1; i >= 0; i--){
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    arr.push({key:d.getFullYear() + '-' + pad(d.getMonth() + 1), label:BULAN[d.getMonth()].slice(0, 3), year:d.getFullYear()});
+  }
+  return arr;
+}
+function waLink(tel){
+  let d = String(tel || '').replace(/\D/g, '');
+  if(d.length < 9) return '';
+  if(d.charAt(0) === '0') d = '62' + d.slice(1);
+  return 'https://wa.me/' + d;
+}
+
+/* ================= Modal & notifikasi ================= */
+function openModal(title, html){
+  el('modalTitle').textContent = title;
+  el('modalBody').innerHTML = html;
+  el('modal').classList.add('open');
+}
+function closeModal(){ el('modal').classList.remove('open'); }
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+let toastTimer = null;
+function toast(msg, type){
+  const t = el('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type === 'err' ? ' err' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = 'toast'; }, 2800);
+}
+function toggleMenu(open){
+  el('sidebar').classList.toggle('open', open);
+  el('scrim').classList.toggle('show', open);
+}
+function val(id){ const x = el(id); return x ? x.value.trim() : ''; }
+
+/* ================= Komponen tampilan ================= */
+function schedItem(b){
+  const a = armadaOf(b), p = b.mulai.split('-').map(Number), st = statusOf(b);
+  return '<div class="item" onclick="openDetail(\'' + b.id + '\')">' +
+    '<div class="datebox"><b>' + p[2] + '</b><span>' + BULAN[p[1] - 1].slice(0, 3) + '</span></div>' +
+    '<div class="item-main"><div class="item-title">' + esc(b.pelanggan) + '</div>' +
+    '<div class="item-sub">' + esc(a ? a.nama : '-') + ' ' + plate(b.unit) + '</div>' +
+    '<div class="item-sub">' + esc(rentang(b)) + ' (' + hariB(b) + ' hari)</div></div>' +
+    '<div class="item-right">' + stBadge(st) + '</div></div>';
+}
+function emptyState(msg){ return '<div class="empty">' + msg + '</div>'; }
+
+/* ================= Halaman: Dashboard ================= */
+function pageDashboard(){
+  const T = todayISO(), ym = T.slice(0, 7);
+  const berjalan = db.bookings.filter(b => statusOf(b) === 'berjalan').sort((a, b) => a.selesai.localeCompare(b.selesai));
+  const akanAll = db.bookings.filter(b => statusOf(b) === 'akan').sort((a, b) => a.mulai.localeCompare(b.mulai));
+  const akan30 = akanAll.filter(b => diffDays(T, b.mulai) <= 30).length;
+  const selesai = db.bookings.filter(b => statusOf(b) === 'selesai').sort((a, b) => b.selesai.localeCompare(a.selesai));
+  const ms = monthSums(ym), laba = ms.inc - ms.exp;
+  const bln = BULAN[Number(ym.slice(5, 7)) - 1] + ' ' + ym.slice(0, 4);
+  const piutang = piutangList();
+
+  const kpi = (l, v, sub, cls) => '<div class="card kpi ' + (cls || '') + '"><div class="l">' + l + '</div><div class="v">' + v + '</div><div class="sub muted">' + sub + '</div></div>';
+  const kpis = '<div class="kpis">' +
+    kpi('Sedang berjalan', berjalan.length, 'unit sedang di jalan hari ini') +
+    kpi('Akan mulai', akan30, 'jadwal dalam 30 hari ke depan') +
+    kpi('Pemasukan', rupiah(ms.inc), bln, 'in') +
+    kpi('Pengeluaran', rupiah(ms.exp), bln, 'out') +
+    kpi('Laba bersih', '<span class="' + (laba < 0 ? 'neg' : 'pos') + '">' + rupiah(laba) + '</span>', bln) +
+    kpi('Belum dibayar', rupiah(totalPiutang()), piutang.length + ' pemesanan belum lunas') + '</div>';
+
+  const months = lastMonths(6).map(m => Object.assign({}, m, monthSums(m.key)));
+  const max = Math.max(1, ...months.flatMap(s => [s.inc, s.exp]));
+  const chart = months.map(s => {
+    const l = s.inc - s.exp;
+    return '<div class="bg" title="' + esc(s.label + ' ' + s.year) + ': masuk ' + rupiah(s.inc) + ', keluar ' + rupiah(s.exp) + '">' +
+      '<div class="bars"><div class="bar in" style="height:' + Math.round(s.inc / max * 100) + '%"></div><div class="bar out" style="height:' + Math.round(s.exp / max * 100) + '%"></div></div>' +
+      '<div class="bl">' + s.label + '</div><div class="bv ' + (l < 0 ? 'neg' : 'pos') + '">' + jt(l) + '</div></div>';
+  }).join('');
+
+  const fleet = db.armada.map(a => {
+    const active = db.bookings.filter(b => !b.batal && b.armadaId === a.id && b.mulai <= T && b.selesai >= T).length;
+    const total = a.units.length, used = Math.min(active, total);
+    const pct = total ? Math.round(used / total * 100) : 0;
+    return '<div class="fleet-row"><div class="top"><span>' + a.icon + ' ' + esc(shortName(a)) + '</span><span class="muted">' + used + ' dari ' + total + ' unit jalan</span></div>' +
+      '<div class="meter"><i style="width:' + pct + '%"></i></div></div>';
+  }).join('');
+
+  const cardList = (title, tab, list, emptyMsg) =>
+    '<div class="card"><div class="card-h"><h2>' + title + '</h2><button class="link" type="button" onclick="gotoJadwal(\'' + tab + '\')">Lihat semua</button></div>' +
+    (list.length ? list.slice(0, 5).map(schedItem).join('') : emptyState(emptyMsg)) + '</div>';
+
+  const piutangCard = '<div class="card"><div class="card-h"><h2>Pembayaran belum lunas</h2><button class="link" type="button" onclick="go(\'pemesanan\')">Semua pemesanan</button></div>' +
+    (piutang.length ? piutang.slice(0, 5).map(x =>
+      '<div class="item" onclick="openDetail(\'' + x.b.id + '\')"><div class="item-main"><div class="item-title">' + esc(x.b.pelanggan) + '</div>' +
+      '<div class="item-sub">' + x.b.id + ', mulai ' + fmtDate(x.b.mulai) + '</div></div>' +
+      '<div class="item-right"><div class="amt neg">' + rupiah(x.sisa) + '</div>' + payBadge(x.b) + '</div></div>').join('')
+      : emptyState('Semua pemesanan sudah lunas.')) + '</div>';
+
+  return kpis +
+    '<div class="grid2"><div class="card"><div class="card-h"><h2>Pemasukan dan pengeluaran 6 bulan terakhir</h2>' +
+    '<div class="legend"><span><i style="background:var(--bar-in)"></i>Masuk</span><span><i style="background:var(--bar-out)"></i>Keluar</span></div></div>' +
+    '<div class="chart">' + chart + '</div><p class="sub" style="margin-top:10px">Angka di bawah nama bulan adalah laba bersih bulan tersebut.</p></div>' +
+    '<div class="card"><div class="card-h"><h2>Armada hari ini</h2></div>' + fleet + '</div></div>' +
+    '<div class="grid3">' +
+    cardList('Sedang berjalan', 'berjalan', berjalan, 'Tidak ada unit yang sedang di jalan.') +
+    cardList('Akan mulai', 'akan', akanAll, 'Belum ada jadwal berikutnya.') +
+    cardList('Baru selesai', 'selesai', selesai, 'Belum ada jadwal yang selesai.') +
+    piutangCard + '</div>';
+}
+
+/* ================= Halaman: Jadwal ================= */
+let jadTab = 'akan';
+let calY = new Date().getFullYear(), calM = new Date().getMonth();
+function gotoJadwal(tab){ jadTab = tab; go('jadwal'); }
+function setJadTab(t){ jadTab = t; render(); }
+function calNav(d){
+  calM += d;
+  if(calM < 0){ calM = 11; calY -= 1; }
+  if(calM > 11){ calM = 0; calY += 1; }
+  render();
+}
+function calToday(){ const n = new Date(); calY = n.getFullYear(); calM = n.getMonth(); render(); }
+function calHTML(){
+  const T = todayISO();
+  const startOffset = (new Date(calY, calM, 1).getDay() + 6) % 7;
+  const daysIn = new Date(calY, calM + 1, 0).getDate();
+  let cells = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(d => '<div class="cal-dow">' + d + '</div>').join('');
+  for(let i = 0; i < startOffset; i++) cells += '<div class="cal-cell off"></div>';
+  for(let d = 1; d <= daysIn; d++){
+    const ds = calY + '-' + pad(calM + 1) + '-' + pad(d);
+    const list = db.bookings.filter(b => !b.batal && b.mulai <= ds && b.selesai >= ds);
+    const chips = list.slice(0, 2).map(b => '<span class="chip s-' + statusOf(b) + '">' + esc(shortName(armadaOf(b))) + '</span>').join('');
+    const more = list.length > 2 ? '<span class="more">+' + (list.length - 2) + ' lagi</span>' : '';
+    const cnt = list.length ? '<span class="cnt">' + list.length + '</span>' : '';
+    cells += '<div class="cal-cell' + (ds === T ? ' today' : '') + (list.length ? ' has' : '') + '"' + (list.length ? ' onclick="openDay(\'' + ds + '\')"' : '') + '><b>' + d + '</b>' + chips + more + cnt + '</div>';
+  }
+  return '<div class="cal-nav"><h2>' + BULAN[calM] + ' ' + calY + '</h2><div style="display:flex;gap:8px">' +
+    '<button class="btn-sm" type="button" onclick="calNav(-1)" aria-label="Bulan sebelumnya">&lsaquo;</button>' +
+    '<button class="btn-sm" type="button" onclick="calToday()">Hari ini</button>' +
+    '<button class="btn-sm" type="button" onclick="calNav(1)" aria-label="Bulan berikutnya">&rsaquo;</button></div></div>' +
+    '<div class="cal-grid">' + cells + '</div>';
+}
+function openDay(ds){
+  const list = db.bookings.filter(b => !b.batal && b.mulai <= ds && b.selesai >= ds);
+  openModal('Jadwal ' + fmtDate(ds), list.length ? list.map(schedItem).join('') : emptyState('Tidak ada jadwal.'));
+}
+function pageJadwal(){
+  const g = {akan:[], berjalan:[], selesai:[], batal:[]};
+  db.bookings.forEach(b => g[statusOf(b)].push(b));
+  g.akan.sort((a, b) => a.mulai.localeCompare(b.mulai));
+  g.berjalan.sort((a, b) => a.selesai.localeCompare(b.selesai));
+  g.selesai.sort((a, b) => b.selesai.localeCompare(a.selesai));
+  g.batal.sort((a, b) => b.mulai.localeCompare(a.mulai));
+  const tabs = [['akan','Akan mulai'],['berjalan','Sedang berjalan'],['selesai','Sudah selesai'],['batal','Dibatalkan']]
+    .map(t => '<button type="button" class="tab' + (jadTab === t[0] ? ' active' : '') + '" onclick="setJadTab(\'' + t[0] + '\')">' + t[1] + '<b>' + g[t[0]].length + '</b></button>').join('');
+  const list = g[jadTab];
+  return '<div class="grid2"><div class="card">' + calHTML() + '</div>' +
+    '<div><div class="tabs">' + tabs + '</div><div class="card">' +
+    (list.length ? list.map(schedItem).join('') : emptyState('Belum ada jadwal di kategori ini. Tambahkan lewat tombol Pemesanan baru.')) + '</div></div></div>';
+}
+
+/* ================= Halaman: Pemesanan ================= */
+const fState = {q:'', status:'', jenis:''};
+function pagePemesanan(){
+  return '<div class="toolbar"><input class="grow" type="search" placeholder="Cari nama, kode, plat, atau tujuan" value="' + esc(fState.q) + '" oninput="fState.q=this.value;renderBookingTable()" aria-label="Cari pemesanan">' +
+    '<select style="width:auto" onchange="fState.status=this.value;renderBookingTable()" aria-label="Filter status">' +
+    '<option value="">Semua status</option>' + ['akan','berjalan','selesai','batal'].map(s => '<option value="' + s + '"' + (fState.status === s ? ' selected' : '') + '>' + ST_LABEL[s] + '</option>').join('') + '</select>' +
+    '<select style="width:auto" onchange="fState.jenis=this.value;renderBookingTable()" aria-label="Filter layanan">' +
+    '<option value="">Semua layanan</option>' + ['Rental','Charter','Paket Liburan'].map(s => '<option' + (fState.jenis === s ? ' selected' : '') + '>' + s + '</option>').join('') + '</select>' +
+    '<span class="sub" id="bkCount"></span></div>' +
+    '<div class="card" style="padding:6px"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Kode</th><th>Pelanggan</th><th>Layanan dan armada</th><th>Tanggal</th><th class="num">Total</th><th>Pembayaran</th><th>Status</th></tr></thead><tbody id="bkBody"></tbody></table></div></div>';
+}
+function renderBookingTable(){
+  const q = fState.q.toLowerCase();
+  const list = db.bookings.filter(b => {
+    if(fState.status && statusOf(b) !== fState.status) return false;
+    if(fState.jenis && b.jenis !== fState.jenis) return false;
+    if(q){
+      const a = armadaOf(b);
+      const hay = (b.id + ' ' + b.pelanggan + ' ' + b.telp + ' ' + b.tujuan + ' ' + (a ? a.nama : '') + ' ' + b.unit).toLowerCase();
+      if(hay.indexOf(q) === -1) return false;
+    }
+    return true;
+  }).sort((x, y) => y.mulai.localeCompare(x.mulai));
+  const body = el('bkBody');
+  if(!body) return;
+  body.innerHTML = list.length ? list.map(b => {
+    const a = armadaOf(b);
+    return '<tr class="click" onclick="openDetail(\'' + b.id + '\')"><td><b>' + b.id + '</b></td>' +
+      '<td><b>' + esc(b.pelanggan) + '</b><div class="sub">' + esc(b.telp) + '</div></td>' +
+      '<td>' + jenisBadge(b.jenis) + '<div style="margin-top:4px">' + esc(a ? a.nama : '-') + ' ' + plate(b.unit) + '</div></td>' +
+      '<td>' + esc(rentang(b)) + '<div class="sub">' + hariB(b) + ' hari</div></td>' +
+      '<td class="num"><b>' + rupiah(b.total) + '</b></td><td>' + payBadge(b) + '</td><td>' + stBadge(statusOf(b)) + '</td></tr>';
+  }).join('') : '<tr><td colspan="7" class="empty">Tidak ada pemesanan yang cocok. Ubah pencarian atau tambah pemesanan baru.</td></tr>';
+  el('bkCount').textContent = list.length + ' pemesanan';
+}
+
+/* Detail pemesanan */
+function openDetail(id){
+  const b = getB(id); if(!b) return;
+  const a = armadaOf(b), st = statusOf(b), paid = paidOf(id), sisa = Math.max(0, b.total - paid);
+  const pays = db.trx.filter(t => t.tipe === 'masuk' && t.ref === id).sort((x, y) => x.tanggal.localeCompare(y.tanggal));
+  const wa = waLink(b.telp);
+  const payRows = pays.length ? '<table class="tbl"><thead><tr><th>Tanggal</th><th>Keterangan</th><th class="num">Jumlah</th></tr></thead><tbody>' +
+    pays.map(t => '<tr><td>' + fmtDate(t.tanggal) + '</td><td>' + esc(t.ket) + '</td><td class="num">' + rupiah(t.jumlah) + '</td></tr>').join('') + '</tbody></table>'
+    : '<p class="muted">Belum ada pembayaran tercatat.</p>';
+  const html = '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">' + stBadge(st) + jenisBadge(b.jenis) + payBadge(b) + '</div>' +
+    '<dl class="dl">' +
+    '<dt>Kode</dt><dd>' + b.id + '</dd>' +
+    '<dt>Pelanggan</dt><dd>' + esc(b.pelanggan) + '</dd>' +
+    '<dt>Telepon</dt><dd>' + esc(b.telp || '-') + (wa ? ' <a href="' + wa + '" target="_blank" rel="noopener">Chat WhatsApp</a>' : '') + '</dd>' +
+    '<dt>Layanan</dt><dd>' + esc(layananLabel(b)) + '</dd>' +
+    '<dt>Armada</dt><dd>' + esc(a ? a.nama : '-') + ' ' + plate(b.unit) + '</dd>' +
+    '<dt>Tujuan</dt><dd>' + esc(b.tujuan || '-') + '</dd>' +
+    '<dt>Tanggal</dt><dd>' + esc(rentang(b)) + ' (' + hariB(b) + ' hari), jemput ' + esc(b.jam || '-') + '</dd>' +
+    '<dt>Total biaya</dt><dd>' + rupiah(b.total) + '</dd>' +
+    '<dt>Sudah dibayar</dt><dd class="pos">' + rupiah(paid) + '</dd>' +
+    '<dt>Sisa tagihan</dt><dd class="' + (sisa > 0 && !b.batal ? 'neg' : '') + '">' + rupiah(sisa) + '</dd>' +
+    '<dt>Catatan</dt><dd>' + esc(b.catatan || '-') + '</dd></dl>' +
+    '<h3 style="margin:20px 0 8px">Riwayat pembayaran</h3>' + payRows +
+    '<div class="modal-actions">' +
+    '<button class="btn-danger" type="button" onclick="deleteBooking(\'' + id + '\')">Hapus</button>' +
+    '<button class="btn-line" type="button" onclick="toggleBatal(\'' + id + '\')">' + (b.batal ? 'Aktifkan kembali' : 'Batalkan pemesanan') + '</button>' +
+    '<button class="btn-line" type="button" onclick="openBooking(\'' + id + '\')">Ubah</button>' +
+    (!b.batal && sisa > 0 ? '<button class="btn" type="button" onclick="openPay(\'' + id + '\')">Catat pembayaran</button>' : '') + '</div>';
+  openModal('Pemesanan ' + id, html);
+}
+function toggleBatal(id){
+  const b = getB(id); if(!b) return;
+  if(!b.batal && !confirm('Batalkan pemesanan ' + id + '? Pembayaran yang sudah tercatat tetap ada di keuangan.')) return;
+  b.batal = !b.batal;
+  saveDB(); render(); openDetail(id);
+  toast(b.batal ? 'Pemesanan dibatalkan' : 'Pemesanan diaktifkan kembali');
+}
+function deleteBooking(id){
+  if(!confirm('Hapus pemesanan ' + id + ' beserta catatan pembayarannya? Tindakan ini tidak bisa dibatalkan.')) return;
+  db.bookings = db.bookings.filter(b => b.id !== id);
+  db.trx = db.trx.filter(t => t.ref !== id);
+  saveDB(); closeModal(); render(); toast('Pemesanan dihapus');
+}
+
+/* Form pemesanan */
+function openBooking(id){
+  const edit = id ? getB(id) : null;
+  const T = todayISO();
+  const b = edit || {jenis:'Rental', pelanggan:'', telp:'', armadaId:db.armada[0] ? db.armada[0].id : '', unit:'', paketId:'', durasi:'24', tujuan:'', mulai:T, selesai:T, jam:'07:00', total:0, catatan:''};
+  if(!db.armada.length){ toast('Tambahkan armada dulu di menu Armada dan harga sewa', 'err'); return; }
+  if(!edit) b.total = calcTotal(b);
+  const armadaOpts = db.armada.map(a => '<option value="' + a.id + '"' + (a.id === b.armadaId ? ' selected' : '') + '>' + esc(a.nama) + '</option>').join('');
+  const paketOpts = '<option value="">Pilih paket</option>' + db.paket.map(p => '<option value="' + p.id + '"' + (p.id === b.paketId ? ' selected' : '') + '>' + esc(p.nama) + ' (' + durLabel(p.hari) + ')</option>').join('');
+  const html = '<div class="form">' +
+    '<div class="field"><label for="f_jenis">Jenis layanan</label><select id="f_jenis" onchange="onJenisChange()">' +
+      ['Rental','Charter','Paket Liburan'].map(j => '<option' + (j === b.jenis ? ' selected' : '') + '>' + j + '</option>').join('') + '</select></div>' +
+    '<div class="field"><label for="f_pelanggan">Nama pelanggan</label><input id="f_pelanggan" value="' + esc(b.pelanggan) + '" placeholder="Contoh: Budi Santoso"></div>' +
+    '<div class="field"><label for="f_telp">Nomor HP atau WhatsApp</label><input id="f_telp" type="tel" value="' + esc(b.telp) + '" placeholder="08xx-xxxx-xxxx"></div>' +
+    '<div class="field"><label for="f_armada">Armada</label><select id="f_armada" onchange="onArmadaChange()">' + armadaOpts + '</select></div>' +
+    '<div class="field"><label for="f_unit">Unit (plat nomor)</label><select id="f_unit"></select></div>' +
+    '<div class="field' + (b.jenis === 'Paket Liburan' ? '' : ' hidden') + '" id="wrapPaket"><label for="f_paket">Paket liburan</label><select id="f_paket" onchange="onPaketChange()">' + paketOpts + '</select></div>' +
+    '<div class="field' + (b.jenis === 'Rental' ? '' : ' hidden') + '" id="wrapDurasi"><label for="f_durasi">Durasi sewa per hari</label><select id="f_durasi" onchange="recalc()"><option value="12"' + (String(b.durasi) === '12' ? ' selected' : '') + '>12 jam</option><option value="24"' + (String(b.durasi) === '24' ? ' selected' : '') + '>24 jam</option></select></div>' +
+    '<div class="field full"><label for="f_tujuan">Tujuan atau rute</label><input id="f_tujuan" value="' + esc(b.tujuan) + '" placeholder="Contoh: Jakarta ke Bandung pulang pergi"></div>' +
+    '<div class="field"><label for="f_mulai">Tanggal mulai</label><input id="f_mulai" type="date" value="' + b.mulai + '" onchange="onMulaiChange()"></div>' +
+    '<div class="field"><label for="f_selesai">Tanggal selesai</label><input id="f_selesai" type="date" value="' + b.selesai + '" onchange="recalc()"></div>' +
+    '<div class="field"><label for="f_jam">Jam jemput</label><input id="f_jam" type="time" value="' + esc(b.jam || '07:00') + '"></div>' +
+    '<div class="field"><label for="f_total">Total biaya (Rp)</label><input id="f_total" type="number" min="0" step="1000" value="' + (b.total || 0) + '"><div class="hint" id="f_hint"></div></div>' +
+    (edit ? '' : '<div class="field"><label for="f_dp">DP atau pembayaran awal (Rp)</label><input id="f_dp" type="number" min="0" step="1000" value="0"></div>') +
+    '<div class="field full"><label for="f_catatan">Catatan</label><textarea id="f_catatan" placeholder="Contoh: jemput di rumah, bawa anak kecil">' + esc(b.catatan) + '</textarea></div>' +
+    '</div><div class="modal-actions"><button class="btn-line" type="button" onclick="closeModal()">Batal</button>' +
+    '<button class="btn" type="button" onclick="saveBooking(' + (edit ? '\'' + id + '\'' : 'null') + ')">Simpan pemesanan</button></div>';
+  openModal(edit ? 'Ubah pemesanan ' + id : 'Pemesanan baru', html);
+  fillUnits(b.unit);
+  hintText();
+}
+function fillUnits(selected){
+  const a = db.armada.find(x => x.id === val('f_armada'));
+  let units = a ? a.units.slice() : [];
+  if(selected && units.indexOf(selected) === -1) units.push(selected);
+  el('f_unit').innerHTML = '<option value="">Belum ditentukan</option>' + units.map(u => '<option value="' + esc(u) + '"' + (u === selected ? ' selected' : '') + '>' + esc(u) + '</option>').join('');
+}
+function onJenisChange(){
+  const j = val('f_jenis');
+  el('wrapPaket').classList.toggle('hidden', j !== 'Paket Liburan');
+  el('wrapDurasi').classList.toggle('hidden', j !== 'Rental');
+  if(j === 'Paket Liburan') syncPaketDates();
+  recalc();
+}
+function onArmadaChange(){ fillUnits(''); recalc(); }
+function onPaketChange(){ syncPaketDates(); recalc(); }
+function onMulaiChange(){
+  if(val('f_jenis') === 'Paket Liburan') syncPaketDates();
+  else if(val('f_selesai') < val('f_mulai')) el('f_selesai').value = val('f_mulai');
+  recalc();
+}
+function syncPaketDates(){
+  const p = db.paket.find(x => x.id === val('f_paket'));
+  const m = val('f_mulai');
+  if(p && m) el('f_selesai').value = addDays(m, p.hari - 1);
+}
+function formState(){
+  return {jenis:val('f_jenis'), armadaId:val('f_armada'), durasi:val('f_durasi'), mulai:val('f_mulai'), selesai:val('f_selesai'), paketId:val('f_paket')};
+}
+function recalc(){
+  const f = formState();
+  if(!f.mulai || !f.selesai) return;
+  el('f_total').value = calcTotal(f);
+  hintText();
+}
+function hintText(){
+  const f = formState(), a = db.armada.find(x => x.id === f.armadaId);
+  if(!a || !f.mulai || !f.selesai || !el('f_hint')) return;
+  const h = Math.max(1, diffDays(f.mulai, f.selesai) + 1);
+  let t = '';
+  if(f.jenis === 'Rental') t = h + ' hari x ' + rupiah(String(f.durasi) === '12' ? a.harga12 : a.harga24);
+  else if(f.jenis === 'Charter') t = h + ' hari x ' + rupiah(a.harga24) + ' (tarif 24 jam)';
+  else { const p = db.paket.find(x => x.id === f.paketId); t = p ? 'Harga paket ' + p.nama : 'Pilih paket untuk harga otomatis'; }
+  el('f_hint').textContent = 'Otomatis: ' + t + '. Boleh diubah manual.';
+}
+function saveBooking(editId){
+  const f = {
+    jenis:val('f_jenis'), pelanggan:val('f_pelanggan'), telp:val('f_telp'), armadaId:val('f_armada'), unit:val('f_unit'),
+    paketId:val('f_jenis') === 'Paket Liburan' ? val('f_paket') : '', durasi:val('f_durasi') || '24', tujuan:val('f_tujuan'),
+    mulai:val('f_mulai'), selesai:val('f_selesai'), jam:val('f_jam'), total:Number(val('f_total')) || 0, catatan:val('f_catatan')
+  };
+  if(!f.pelanggan) return toast('Nama pelanggan wajib diisi', 'err');
+  if(!f.mulai || !f.selesai) return toast('Tanggal mulai dan selesai wajib diisi', 'err');
+  if(f.selesai < f.mulai) return toast('Tanggal selesai tidak boleh sebelum tanggal mulai', 'err');
+  if(f.jenis === 'Paket Liburan' && !f.paketId) return toast('Pilih paket liburan terlebih dahulu', 'err');
+  if(!(f.total > 0)) return toast('Total biaya harus lebih dari 0', 'err');
+  const dp = editId ? 0 : (Number(val('f_dp')) || 0);
+  if(dp < 0 || dp > f.total) return toast('DP tidak boleh lebih besar dari total biaya', 'err');
+  const clash = bentrok(f.armadaId, f.unit, f.mulai, f.selesai, editId);
+  if(clash.length && !confirm('Unit ' + f.unit + ' sudah terjadwal pada pemesanan ' + clash.map(c => c.id).join(', ') + ' di tanggal yang sama. Tetap simpan?')) return;
+  if(editId){
+    const b = getB(editId);
+    Object.assign(b, f);
+    saveDB(); render(); openDetail(editId); toast('Perubahan disimpan');
+  } else {
+    const id = newBookingId();
+    f.id = id; f.batal = false; f.dibuat = todayISO();
+    db.bookings.push(f);
+    if(dp > 0) addTrx({tanggal:todayISO(), tipe:'masuk', kategori:'Pembayaran sewa', ket:'DP ' + id + ' - ' + f.pelanggan, jumlah:dp, ref:id});
+    saveDB(); closeModal(); render(); toast('Pemesanan ' + id + ' disimpan');
+  }
+}
+
+/* Pembayaran */
+function openPay(id){
+  const b = getB(id); if(!b) return;
+  const sisa = Math.max(0, b.total - paidOf(id));
+  openModal('Catat pembayaran ' + id,
+    '<p class="sub" style="margin-bottom:14px">' + esc(b.pelanggan) + ', sisa tagihan ' + rupiah(sisa) + '</p>' +
+    '<div class="form"><div class="field"><label for="p_tgl">Tanggal bayar</label><input id="p_tgl" type="date" value="' + todayISO() + '"></div>' +
+    '<div class="field"><label for="p_jenis">Jenis pembayaran</label><select id="p_jenis"><option>DP</option><option>Cicilan</option><option selected>Pelunasan</option></select></div>' +
+    '<div class="field full"><label for="p_jml">Jumlah (Rp)</label><input id="p_jml" type="number" min="0" step="1000" value="' + sisa + '"></div></div>' +
+    '<div class="modal-actions"><button class="btn-line" type="button" onclick="openDetail(\'' + id + '\')">Kembali</button>' +
+    '<button class="btn" type="button" onclick="savePay(\'' + id + '\')">Simpan pembayaran</button></div>');
+}
+function savePay(id){
+  const b = getB(id); if(!b) return;
+  const jml = Number(val('p_jml')) || 0, tgl = val('p_tgl');
+  if(!tgl) return toast('Tanggal bayar wajib diisi', 'err');
+  if(jml <= 0) return toast('Jumlah harus lebih dari 0', 'err');
+  addTrx({tanggal:tgl, tipe:'masuk', kategori:'Pembayaran sewa', ket:val('p_jenis') + ' ' + id + ' - ' + b.pelanggan, jumlah:jml, ref:id});
+  saveDB(); render(); openDetail(id); toast('Pembayaran dicatat');
+}
+
+/* ================= Halaman: Armada & harga sewa ================= */
+function pageArmada(){
+  const rows = db.armada.map(a => '<tr><td><div class="vname"><span class="vi">' + a.icon + '</span><div><b>' + esc(a.nama) + '</b><div class="sub">' + esc(a.kategori) + '</div></div></div></td>' +
+    '<td class="num">' + a.kursi + ' kursi</td><td class="num"><b>' + rupiah(a.harga12) + '</b></td><td class="num"><b>' + rupiah(a.harga24) + '</b></td><td class="num">' + rupiah(a.lebih) + '</td>' +
+    '<td><div class="plates">' + (a.units.length ? a.units.map(plate).join('') : '<span class="muted">Belum ada unit</span>') + '</div></td>' +
+    '<td class="no-print"><button class="btn-sm" type="button" onclick="openArmada(\'' + a.id + '\')">Ubah</button></td></tr>').join('');
+  return '<div class="toolbar no-print"><span class="sub">Harga sewa per hari, sudah termasuk driver.</span><span class="sp"></span>' +
+    '<button class="btn-line" type="button" onclick="window.print()">Cetak daftar harga</button>' +
+    '<button class="btn" type="button" onclick="openArmada()">+ Tambah armada</button></div>' +
+    '<div class="card" style="padding:6px"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Armada</th><th class="num">Kapasitas</th><th class="num">Sewa 12 jam</th><th class="num">Sewa 24 jam</th><th class="num">Lembur per jam</th><th>Unit</th><th class="no-print"></th></tr></thead><tbody>' +
+    (rows || '<tr><td colspan="7" class="empty">Belum ada armada.</td></tr>') + '</tbody></table></div></div>' +
+    '<div class="note">' + esc(db.settings.catatanHarga) + '</div>';
+}
+function openArmada(id){
+  const a = id ? db.armada.find(x => x.id === id) : {nama:'', kategori:'', kursi:'', icon:'🚗', harga12:'', harga24:'', lebih:'', units:[]};
+  if(!a) return;
+  const icons = ['🚗','🚙','🚐','🚌'].map(i => '<option' + (i === a.icon ? ' selected' : '') + '>' + i + '</option>').join('');
+  openModal(id ? 'Ubah armada' : 'Tambah armada',
+    '<div class="form"><div class="field full"><label for="g_nama">Nama armada</label><input id="g_nama" value="' + esc(a.nama) + '" placeholder="Contoh: Toyota Alphard"></div>' +
+    '<div class="field"><label for="g_kat">Kategori</label><input id="g_kat" value="' + esc(a.kategori) + '" placeholder="Contoh: Mobil premium"></div>' +
+    '<div class="field"><label for="g_kursi">Jumlah kursi</label><input id="g_kursi" type="number" min="1" value="' + a.kursi + '"></div>' +
+    '<div class="field"><label for="g_icon">Ikon</label><select id="g_icon">' + icons + '</select></div>' +
+    '<div class="field"><label for="g_h12">Harga sewa 12 jam (Rp)</label><input id="g_h12" type="number" min="0" step="1000" value="' + a.harga12 + '"></div>' +
+    '<div class="field"><label for="g_h24">Harga sewa 24 jam (Rp)</label><input id="g_h24" type="number" min="0" step="1000" value="' + a.harga24 + '"></div>' +
+    '<div class="field"><label for="g_lebih">Lembur per jam (Rp)</label><input id="g_lebih" type="number" min="0" step="1000" value="' + a.lebih + '"></div>' +
+    '<div class="field full"><label for="g_units">Daftar plat nomor (satu per baris)</label><textarea id="g_units" rows="4">' + esc(a.units.join('\n')) + '</textarea><div class="hint">Jumlah baris menentukan jumlah unit armada.</div></div></div>' +
+    '<div class="modal-actions">' + (id ? '<button class="btn-danger" type="button" onclick="deleteArmada(\'' + id + '\')">Hapus</button>' : '') +
+    '<button class="btn-line" type="button" onclick="closeModal()">Batal</button><button class="btn" type="button" onclick="saveArmada(' + (id ? '\'' + id + '\'' : 'null') + ')">Simpan</button></div>');
+}
+function saveArmada(id){
+  const nama = val('g_nama');
+  if(!nama) return toast('Nama armada wajib diisi', 'err');
+  const data = {
+    nama:nama, kategori:val('g_kat'), kursi:Number(val('g_kursi')) || 0, icon:val('g_icon') || '🚗',
+    harga12:Number(val('g_h12')) || 0, harga24:Number(val('g_h24')) || 0, lebih:Number(val('g_lebih')) || 0,
+    units:el('g_units').value.split('\n').map(s => s.trim().toUpperCase()).filter(Boolean)
+  };
+  if(id){ Object.assign(db.armada.find(x => x.id === id), data); }
+  else { data.id = 'a' + Date.now(); db.armada.push(data); }
+  saveDB(); closeModal(); render(); toast('Armada disimpan');
+}
+function deleteArmada(id){
+  if(db.bookings.some(b => b.armadaId === id)) return toast('Armada ini sudah dipakai di pemesanan, jadi tidak bisa dihapus', 'err');
+  if(!confirm('Hapus armada ini?')) return;
+  db.armada = db.armada.filter(a => a.id !== id);
+  db.paket.forEach(p => { delete p.prices[id]; });
+  saveDB(); closeModal(); render(); toast('Armada dihapus');
+}
+
+/* ================= Halaman: Paket liburan ================= */
+function pagePaket(){
+  const cards = db.paket.map(p => '<div class="card paket"><div class="ph"><div><h3>' + esc(p.nama) + '</h3><div class="sub">' + durLabel(p.hari) + '</div></div>' +
+    '<button class="btn-sm no-print" type="button" onclick="openPaket(\'' + p.id + '\')">Ubah</button></div>' +
+    '<p class="dest">' + esc(p.destinasi) + '</p><p class="desc">' + esc(p.deskripsi) + '</p>' +
+    '<div class="prices">' + db.armada.map(a => '<div class="pr"><span>' + a.icon + ' ' + esc(shortName(a)) + ' <span class="muted">(' + a.kursi + ' kursi)</span></span><b>' + rupiah(p.prices[a.id] || 0) + '</b></div>').join('') + '</div></div>').join('');
+  return '<div class="toolbar no-print"><span class="sub">Harga paket per unit kendaraan.</span><span class="sp"></span>' +
+    '<button class="btn-line" type="button" onclick="window.print()">Cetak daftar paket</button>' +
+    '<button class="btn" type="button" onclick="openPaket()">+ Tambah paket</button></div>' +
+    '<div class="paket-grid">' + (cards || '<div class="card empty">Belum ada paket liburan.</div>') + '</div>' +
+    '<div class="note">' + esc(db.settings.catatanPaket) + '</div>';
+}
+function openPaket(id){
+  const p = id ? db.paket.find(x => x.id === id) : {nama:'', hari:2, destinasi:'', deskripsi:'', prices:{}};
+  if(!p) return;
+  const inputs = db.armada.map(a => '<div class="field"><label for="pp_' + a.id + '">' + esc(a.nama) + ' (Rp)</label><input id="pp_' + a.id + '" type="number" min="0" step="1000" value="' + (p.prices[a.id] || 0) + '"></div>').join('');
+  openModal(id ? 'Ubah paket liburan' : 'Tambah paket liburan',
+    '<div class="form"><div class="field"><label for="pk_nama">Nama paket</label><input id="pk_nama" value="' + esc(p.nama) + '" placeholder="Contoh: Lombok"></div>' +
+    '<div class="field"><label for="pk_hari">Lama perjalanan (hari)</label><input id="pk_hari" type="number" min="1" max="30" value="' + p.hari + '"></div>' +
+    '<div class="field full"><label for="pk_dest">Destinasi</label><input id="pk_dest" value="' + esc(p.destinasi) + '"></div>' +
+    '<div class="field full"><label for="pk_desc">Keterangan</label><textarea id="pk_desc">' + esc(p.deskripsi) + '</textarea></div></div>' +
+    '<h3 style="margin:18px 0 10px">Harga per armada</h3><div class="form">' + inputs + '</div>' +
+    '<div class="modal-actions">' + (id ? '<button class="btn-danger" type="button" onclick="deletePaket(\'' + id + '\')">Hapus</button>' : '') +
+    '<button class="btn-line" type="button" onclick="closeModal()">Batal</button><button class="btn" type="button" onclick="savePaket(' + (id ? '\'' + id + '\'' : 'null') + ')">Simpan</button></div>');
+}
+function savePaket(id){
+  const nama = val('pk_nama');
+  if(!nama) return toast('Nama paket wajib diisi', 'err');
+  const prices = {};
+  db.armada.forEach(a => { prices[a.id] = Number(val('pp_' + a.id)) || 0; });
+  const data = {nama:nama, hari:Math.max(1, Math.min(30, Number(val('pk_hari')) || 1)), destinasi:val('pk_dest'), deskripsi:el('pk_desc').value.trim(), prices:prices};
+  if(id){ Object.assign(db.paket.find(x => x.id === id), data); }
+  else { data.id = 'p' + Date.now(); db.paket.push(data); }
+  saveDB(); closeModal(); render(); toast('Paket disimpan');
+}
+function deletePaket(id){
+  if(db.bookings.some(b => b.paketId === id)) return toast('Paket ini sudah dipakai di pemesanan, jadi tidak bisa dihapus', 'err');
+  if(!confirm('Hapus paket ini?')) return;
+  db.paket = db.paket.filter(p => p.id !== id);
+  saveDB(); closeModal(); render(); toast('Paket dihapus');
+}
+
+/* ================= Halaman: Keuangan ================= */
+let finMonth = 'all';
+function setFinMonth(v){ finMonth = v; render(); }
+function finList(){
+  return db.trx.filter(t => finMonth === 'all' || t.tanggal.slice(0, 7) === finMonth)
+    .sort((a, b) => b.tanggal.localeCompare(a.tanggal) || b.id.localeCompare(a.id));
+}
+function pageKeuangan(){
+  const keys = {};
+  keys[todayISO().slice(0, 7)] = 1;
+  db.trx.forEach(t => { keys[t.tanggal.slice(0, 7)] = 1; });
+  const monthOpts = '<option value="all"' + (finMonth === 'all' ? ' selected' : '') + '>Semua waktu</option>' +
+    Object.keys(keys).sort().reverse().map(k => '<option value="' + k + '"' + (finMonth === k ? ' selected' : '') + '>' + BULAN[Number(k.slice(5, 7)) - 1] + ' ' + k.slice(0, 4) + '</option>').join('');
+  const list = finList();
+  const inc = list.filter(t => t.tipe === 'masuk').reduce((s, t) => s + t.jumlah, 0);
+  const exp = list.filter(t => t.tipe === 'keluar').reduce((s, t) => s + t.jumlah, 0);
+  const laba = inc - exp;
+
+  const cats = {};
+  list.filter(t => t.tipe === 'keluar').forEach(t => { cats[t.kategori] = (cats[t.kategori] || 0) + t.jumlah; });
+  const catRows = Object.keys(cats).sort((a, b) => cats[b] - cats[a]).map(k =>
+    '<div class="bar-row"><div class="top"><span>' + esc(k) + '</span><b>' + rupiah(cats[k]) + '</b></div><div class="meter"><i style="width:' + Math.round(cats[k] / (exp || 1) * 100) + '%;background:var(--bar-out)"></i></div></div>').join('');
+
+  const monthRows = lastMonths(6).reverse().map(m => {
+    const s = monthSums(m.key), l = s.inc - s.exp;
+    return '<tr><td>' + m.label + ' ' + m.year + '</td><td class="num">' + rupiah(s.inc) + '</td><td class="num">' + rupiah(s.exp) + '</td><td class="num ' + (l < 0 ? 'neg' : 'pos') + '"><b>' + rupiah(l) + '</b></td></tr>';
+  }).join('');
+
+  const rows = list.map(t => '<tr><td>' + fmtDate(t.tanggal) + '</td><td>' + esc(t.ket) + '</td><td>' + esc(t.kategori) + '</td>' +
+    '<td>' + (t.ref ? '<button class="link" type="button" onclick="openDetail(\'' + t.ref + '\')">' + t.ref + '</button>' : '<span class="muted">-</span>') + '</td>' +
+    '<td class="num ' + (t.tipe === 'masuk' ? 'pos' : 'neg') + '"><b>' + (t.tipe === 'masuk' ? '+' : '-') + ' ' + rupiah(t.jumlah) + '</b></td>' +
+    '<td class="num"><button class="btn-sm" type="button" onclick="openTrx(null,\'' + t.id + '\')">Ubah</button> <button class="btn-sm" type="button" onclick="deleteTrx(\'' + t.id + '\')">Hapus</button></td></tr>').join('');
+
+  return '<div class="toolbar"><select style="width:auto" onchange="setFinMonth(this.value)" aria-label="Pilih bulan">' + monthOpts + '</select><span class="sp"></span>' +
+    '<button class="btn-line" type="button" onclick="exportCSV()">Unduh CSV</button>' +
+    '<button class="btn-line" type="button" onclick="openTrx(\'keluar\')">+ Pengeluaran</button>' +
+    '<button class="btn" type="button" onclick="openTrx(\'masuk\')">+ Pemasukan</button></div>' +
+    '<div class="kpis">' +
+    '<div class="card kpi in"><div class="l">Total pemasukan</div><div class="v">' + rupiah(inc) + '</div></div>' +
+    '<div class="card kpi out"><div class="l">Total pengeluaran</div><div class="v">' + rupiah(exp) + '</div></div>' +
+    '<div class="card kpi"><div class="l">Laba bersih</div><div class="v ' + (laba < 0 ? 'neg' : 'pos') + '">' + rupiah(laba) + '</div></div>' +
+    '<div class="card kpi"><div class="l">Belum dibayar pelanggan</div><div class="v">' + rupiah(totalPiutang()) + '</div><div class="sub muted">dari semua pemesanan aktif</div></div></div>' +
+    '<div class="grid2 even"><div class="card"><div class="card-h"><h2>Pengeluaran per kategori</h2></div>' + (catRows || emptyState('Belum ada pengeluaran pada periode ini.')) + '</div>' +
+    '<div class="card"><div class="card-h"><h2>Ringkasan per bulan</h2></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Bulan</th><th class="num">Masuk</th><th class="num">Keluar</th><th class="num">Laba</th></tr></thead><tbody>' + monthRows + '</tbody></table></div></div></div>' +
+    '<div class="card" style="padding:6px"><div class="card-h" style="padding:12px 12px 0"><h2>Riwayat transaksi</h2><span class="sub">' + list.length + ' transaksi</span></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Kategori</th><th>Pemesanan</th><th class="num">Jumlah</th><th></th></tr></thead><tbody>' +
+    (rows || '<tr><td colspan="6" class="empty">Belum ada transaksi pada periode ini.</td></tr>') + '</tbody></table></div></div>';
+}
+function openTrx(tipe, id){
+  const t = id ? db.trx.find(x => x.id === id) : {tanggal:todayISO(), tipe:tipe || 'keluar', kategori:'', ket:'', jumlah:'', ref:''};
+  if(!t) return;
+  const refOpts = '<option value="">Tidak terkait pemesanan</option>' + db.bookings.slice().sort((a, b) => b.mulai.localeCompare(a.mulai)).map(b => '<option value="' + b.id + '"' + (b.id === t.ref ? ' selected' : '') + '>' + b.id + ' - ' + esc(b.pelanggan) + '</option>').join('');
+  openModal(id ? 'Ubah transaksi' : (t.tipe === 'masuk' ? 'Catat pemasukan' : 'Catat pengeluaran'),
+    '<div class="form"><div class="field"><label for="t_tipe">Jenis</label><select id="t_tipe" onchange="fillKategori()"><option value="masuk"' + (t.tipe === 'masuk' ? ' selected' : '') + '>Pemasukan</option><option value="keluar"' + (t.tipe === 'keluar' ? ' selected' : '') + '>Pengeluaran</option></select></div>' +
+    '<div class="field"><label for="t_tgl">Tanggal</label><input id="t_tgl" type="date" value="' + t.tanggal + '"></div>' +
+    '<div class="field"><label for="t_kat">Kategori</label><select id="t_kat"></select></div>' +
+    '<div class="field"><label for="t_jml">Jumlah (Rp)</label><input id="t_jml" type="number" min="0" step="1000" value="' + t.jumlah + '"></div>' +
+    '<div class="field full"><label for="t_ket">Keterangan</label><input id="t_ket" value="' + esc(t.ket) + '" placeholder="Contoh: Solar bus trip Bandung"></div>' +
+    '<div class="field full" id="t_refwrap"><label for="t_ref">Terkait pemesanan</label><select id="t_ref">' + refOpts + '</select></div></div>' +
+    '<div class="modal-actions"><button class="btn-line" type="button" onclick="closeModal()">Batal</button><button class="btn" type="button" onclick="saveTrx(' + (id ? '\'' + id + '\'' : 'null') + ')">Simpan</button></div>');
+  fillKategori(t.kategori);
+}
+function fillKategori(selected){
+  const masuk = val('t_tipe') === 'masuk';
+  const list = masuk ? KAT_MASUK : KAT_KELUAR;
+  el('t_kat').innerHTML = list.map(k => '<option' + (k === selected ? ' selected' : '') + '>' + k + '</option>').join('');
+  el('t_refwrap').classList.toggle('hidden', !masuk);
+}
+function saveTrx(id){
+  const data = {tipe:val('t_tipe'), tanggal:val('t_tgl'), kategori:val('t_kat'), jumlah:Number(val('t_jml')) || 0, ket:val('t_ket'), ref:val('t_tipe') === 'masuk' ? val('t_ref') : ''};
+  if(!data.tanggal) return toast('Tanggal wajib diisi', 'err');
+  if(data.jumlah <= 0) return toast('Jumlah harus lebih dari 0', 'err');
+  if(!data.ket) data.ket = data.kategori;
+  if(id) Object.assign(db.trx.find(x => x.id === id), data); else addTrx(data);
+  saveDB(); closeModal(); render(); toast('Transaksi disimpan');
+}
+function deleteTrx(id){
+  if(!confirm('Hapus transaksi ini?')) return;
+  db.trx = db.trx.filter(t => t.id !== id);
+  saveDB(); render(); toast('Transaksi dihapus');
+}
+function download(name, text, type){
+  const blob = new Blob(['\ufeff' + text], {type:type});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 500);
+}
+function exportCSV(){
+  const rows = [['Tanggal','Jenis','Kategori','Keterangan','Pemesanan','Jumlah']];
+  finList().forEach(t => rows.push([t.tanggal, t.tipe === 'masuk' ? 'Pemasukan' : 'Pengeluaran', t.kategori, t.ket, t.ref, t.jumlah]));
+  const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n');
+  download('keuangan-' + (finMonth === 'all' ? 'semua' : finMonth) + '.csv', csv, 'text/csv;charset=utf-8');
+}
+
+/* ================= Halaman: Pengaturan ================= */
+function pagePengaturan(){
+  const s = db.settings;
+  return '<div class="grid2 even"><div class="card"><div class="card-h"><h2>Profil usaha</h2></div><div class="form">' +
+    '<div class="field full"><label for="s_nama">Nama usaha</label><input id="s_nama" value="' + esc(s.nama) + '"></div>' +
+    '<div class="field"><label for="s_telp">Telepon</label><input id="s_telp" value="' + esc(s.telp) + '"></div>' +
+    '<div class="field"><label for="s_alamat">Alamat</label><input id="s_alamat" value="' + esc(s.alamat) + '"></div>' +
+    '<div class="field full"><label for="s_ch">Catatan di daftar harga sewa</label><textarea id="s_ch">' + esc(s.catatanHarga) + '</textarea></div>' +
+    '<div class="field full"><label for="s_cp">Catatan di daftar paket liburan</label><textarea id="s_cp">' + esc(s.catatanPaket) + '</textarea></div></div>' +
+    '<div class="modal-actions"><button class="btn" type="button" onclick="saveSettings()">Simpan pengaturan</button></div></div>' +
+    '<div class="card"><div class="card-h"><h2>Cadangan data</h2></div>' +
+    '<p class="muted" style="margin-bottom:14px">Data tersimpan di browser perangkat ini. Unduh cadangan secara berkala, lalu pulihkan di perangkat lain bila perlu.</p>' +
+    '<div style="display:flex;flex-wrap:wrap;gap:10px"><button class="btn-line" type="button" onclick="backupData()">Unduh cadangan</button>' +
+    '<button class="btn-line" type="button" onclick="el(\'restoreFile\').click()">Pulihkan dari cadangan</button>' +
+    '<input type="file" id="restoreFile" accept=".json,application/json" class="hidden" onchange="restoreData(this)"></div>' +
+    '<h3 style="margin:26px 0 8px">Data contoh</h3><p class="muted" style="margin-bottom:14px">Semua data saat ini akan diganti dengan data contoh awal. Unduh cadangan dulu bila perlu.</p>' +
+    '<button class="btn-danger" type="button" onclick="resetData()">Kembalikan data contoh</button></div></div>';
+}
+function saveSettings(){
+  db.settings.nama = val('s_nama') || 'Rental dan Charter';
+  db.settings.telp = val('s_telp');
+  db.settings.alamat = val('s_alamat');
+  db.settings.catatanHarga = el('s_ch').value.trim();
+  db.settings.catatanPaket = el('s_cp').value.trim();
+  saveDB(); render(); toast('Pengaturan disimpan');
+}
+function backupData(){ download('cadangan-rental-' + todayISO() + '.json', JSON.stringify(db, null, 2), 'application/json'); }
+function restoreData(input){
+  const f = input.files && input.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const o = JSON.parse(r.result);
+      if(!(o && o.armada && o.bookings && o.trx && o.paket && o.settings && o.seq)) throw new Error('format');
+      if(!confirm('Data saat ini akan diganti dengan isi file cadangan. Lanjutkan?')) return;
+      db = o; saveDB(); render(); toast('Data berhasil dipulihkan');
+    } catch(e) { toast('File cadangan tidak valid', 'err'); }
+  };
+  r.readAsText(f);
+  input.value = '';
+}
+function resetData(){
+  if(!confirm('Ganti semua data dengan data contoh? Data Anda saat ini akan hilang.')) return;
+  buildSeed(); saveDB(); render(); toast('Data contoh dikembalikan');
+}
+
+/* ================= Router & render ================= */
+let view = 'dashboard';
+function go(v){ view = v; toggleMenu(false); render(); window.scrollTo(0, 0); }
+const PAGES = {
+  dashboard:{title:'Dashboard', sub:() => { const d = new Date(); return HARI[d.getDay()] + ', ' + d.getDate() + ' ' + BULAN[d.getMonth()] + ' ' + d.getFullYear(); }, draw:pageDashboard},
+  jadwal:{title:'Jadwal', sub:() => 'Jadwal yang akan mulai, berjalan, dan sudah selesai', draw:pageJadwal},
+  pemesanan:{title:'Pemesanan', sub:() => 'Semua pesanan rental, charter, dan paket liburan', draw:pagePemesanan},
+  armada:{title:'Armada dan harga sewa', sub:() => 'Daftar armada, unit, dan tarif sewa', draw:pageArmada},
+  paket:{title:'Paket liburan', sub:() => 'Daftar harga paket wisata per armada', draw:pagePaket},
+  keuangan:{title:'Keuangan', sub:() => 'Pemasukan, pengeluaran, dan laba bersih', draw:pageKeuangan},
+  pengaturan:{title:'Pengaturan', sub:() => 'Profil usaha dan cadangan data', draw:pagePengaturan}
+};
+function render(){
+  const p = PAGES[view];
+  el('brandName').textContent = db.settings.nama;
+  el('nav').innerHTML = NAV.map(n => '<button type="button" class="nav-btn' + (n.id === view ? ' active' : '') + '" onclick="go(\'' + n.id + '\')">' + svg(n.id) + '<span>' + n.label + '</span></button>').join('');
+  el('sideFoot').textContent = db.settings.telp ? 'Kontak: ' + db.settings.telp : '';
+  el('pageTitle').textContent = p.title;
+  el('pageSub').textContent = p.sub();
+  el('notice').innerHTML = storageOK ? '' : '<div class="banner">Penyimpanan browser tidak tersedia di tampilan ini, sehingga data hanya bertahan selama halaman terbuka. Setelah file dibuka dari komputer atau hosting, data otomatis tersimpan.</div>';
+  el('view').innerHTML = p.draw();
+  if(view === 'pemesanan') renderBookingTable();
+}
+
+/* ================= Mulai ================= */
+(function init(){
+  try { localStorage.setItem('__rc_test', '1'); localStorage.removeItem('__rc_test'); } catch(e) { storageOK = false; }
+  db = loadDB();
+  if(!db){ buildSeed(); saveDB(); }
+  render();
+})();
+</script>
+</body>
+</html>
